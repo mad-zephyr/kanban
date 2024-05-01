@@ -2,7 +2,6 @@
 
 import { FC, useEffect, useMemo, useState } from 'react'
 import cn from 'classnames'
-import { Reorder } from 'framer-motion'
 
 import { useAppContext } from '@/context/app.context'
 import type { BoardStatus, Task } from '@/context/todo.context'
