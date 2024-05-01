@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import { FC, useEffect } from 'react'
 import {
   Controller,
   SubmitHandler,
@@ -50,7 +50,7 @@ export const EditBoardForm: FC<TEditBoardForm> = ({ onClose }) => {
     resolver: zodResolver(EditBoardFormSchema),
   })
 
-  const { handleSubmit, control } = methods
+  const { handleSubmit, control, reset } = methods
 
   const {
     fields: columnFields,

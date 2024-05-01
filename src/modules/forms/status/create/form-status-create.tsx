@@ -18,7 +18,7 @@ import { useAppContext } from '@/context/app.context'
 import styles from './style.module.sass'
 
 const DEFAULT_STATUS = {
-  name: 'Status name',
+  name: 'Set new status / column name',
   bg: '#B4D455',
 }
 
@@ -58,7 +58,7 @@ const CreateTaskStatusesForm: FC<TCreateBoardForm> = ({ onClose }) => {
     resolver: zodResolver(CreateStatusTaskFormSchema),
   })
 
-  const { handleSubmit, control } = methods
+  const { handleSubmit, control, formState } = methods
 
   const {
     fields: columnStatuses,

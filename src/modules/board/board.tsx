@@ -29,10 +29,6 @@ export const Board: FC = () => {
     [activeBoard?.statuses, allTasks]
   )
 
-  const [groupedTasks, setGroupedTasks] = useState(
-    groupTasksForCurrentBoard(activeBoard?.statuses || [], allTasks)
-  )
-
   const handleCloseModalTask = () => {
     setShowTaskModal(false)
     setEditedTask()

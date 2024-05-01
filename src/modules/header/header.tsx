@@ -76,28 +76,30 @@ export const Header: FC = () => {
             + Add New Task
           </Button>
 
-          <DropDown
-            className={styles.dropdown}
-            container={dropDownContainer}
-            triger={
-              <IconButton variant="ghost">
-                <DotsVerticalIcon />
-              </IconButton>
-            }
-            content={
-              <>
-                <Item onClick={handleShowModal} className="DropdownMenuItem">
-                  Edit Board
-                </Item>
-                <Item
-                  onClick={handleShowDeleteModal}
-                  className={cn('DropdownMenuItem', styles.itemDelete)}
-                >
-                  Delete Board
-                </Item>
-              </>
-            }
-          />
+          {currentBoard && (
+            <DropDown
+              className={styles.dropdown}
+              container={dropDownContainer}
+              triger={
+                <IconButton variant="ghost">
+                  <DotsVerticalIcon />
+                </IconButton>
+              }
+              content={
+                <>
+                  <Item onClick={handleShowModal} className="DropdownMenuItem">
+                    Edit Board
+                  </Item>
+                  <Item
+                    onClick={handleShowDeleteModal}
+                    className={cn('DropdownMenuItem', styles.itemDelete)}
+                  >
+                    Delete Board
+                  </Item>
+                </>
+              }
+            />
+          )}
         </div>
         <Modal
           isOpen={isShowAddTaskModal}

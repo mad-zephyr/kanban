@@ -32,12 +32,24 @@ export const BoardColumn: FC = () => {
         </div>
       ) : (
         <div className={styles.main_expanded}>
-          <span className={styles.text}>
-            This board is empty. Create a new column to get started.
-          </span>
-          <Button onClick={handleAddStatus} size={'4'} className={styles.btn}>
-            + Add New Column
-          </Button>
+          {!!activeBoard ? (
+            <>
+              <span className={styles.text}>
+                This board is empty. Create a new column to get started.
+              </span>
+              <Button
+                onClick={handleAddStatus}
+                size={'4'}
+                className={styles.btn}
+              >
+                + Add New Column
+              </Button>
+            </>
+          ) : (
+            <span className={styles.text}>
+              Select an existing board or create a new one
+            </span>
+          )}
         </div>
       )}
 
