@@ -1,0 +1,53 @@
+.item
+    display: flex
+    align-items: center
+    list-style: none
+    height: 48px
+    gap: 16px
+
+    border-radius: 0 100px 100px 0
+
+    padding-left: 32px
+    background: none
+    cursor: pointer
+    color: #828FA3
+
+    &:hover
+        background: rgba(#635FC7, 0.1)
+
+        svg
+            fill: var(--violet-9)
+
+    &:active
+        background: var(--violet-9)
+
+        svg
+            fill: var(--gray-9)
+
+.active
+    background: var(--violet-9)
+    color: white!important
+
+    &:hover
+        background: var(--violet-9) !important
+        color: white
+
+        svg
+            fill: rgb(130, 143, 163)!important
+
+:root, .dark, .dark-theme, :is(.dark, .dark-theme)
+    :where(.radix-themes:not(.light, .light-theme))
+        --color-background: #2b2c37
+
+        .item
+            &:hover
+                background: ""
+
+@media (prefers-color-scheme: dark)
+    .item
+        &:hover
+            background: rgba(#FFF, 1)
+            color: var(--violet-9)
+
+            svg
+                fill: var(--violet-9)

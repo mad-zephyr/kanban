@@ -1,0 +1,56 @@
+
+.container
+    display: flex
+    align-items: center
+    padding: 12px
+    border: 1px solid var(--gray-5)
+    width: auto
+    border-radius: 4px
+    background-color: var(--gray-1)
+
+    &:hover
+        background-color: var(--violet-3)
+
+.Label
+    display: flex
+    line-height: 1
+    font-weight: 700
+    font-size: 12px
+    color: var(--gray-12)
+    cursor: pointer
+    column-gap: 16px
+    width: 100%
+
+    &:has(input:checked)
+        text-decoration: line-through
+
+        .text
+            opacity: 0.5
+
+.CheckboxRoot
+    display: flex
+    align-items: center
+    justify-content: center
+
+    background-color: var(--gray-2)
+    width: 16px
+    height: 16px
+    border-radius: 4px
+    box-shadow: 0 0 0 1px var(--gray-5)
+
+    &:hover
+        background-color: var(--violet-2)
+
+    &:focus
+        box-shadow: 0 0 0 2px var(--violet-3)
+
+    &:checked
+        background-color: var(--violet-1)
+        box-shadow: 0 0 0 1px var(--violet-1)
+
+.CheckboxIndicator
+    color: var(--gray-12)
+
+.text
+    opacity: 1
+    width: calc(100% - 32px)

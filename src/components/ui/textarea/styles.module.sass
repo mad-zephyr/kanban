@@ -1,0 +1,102 @@
+
+.fieldset
+    display: flex
+    gap: 8px
+    flex-direction: column
+    align-items: flex-start
+    border: unset
+    width: 100%
+
+    label
+        font-size: 12px
+        font-weight: 700
+        color: var(--gray-12)
+        text-align: left
+        line-height: 1
+
+    textarea
+        flex: 1
+        display: inline-flex
+        align-items: center
+        justify-content: center
+        border-radius: 4px
+        font-size: 15px
+        line-height: 1
+        color: var(--violet-11)
+        box-shadow: 0 0 0 1px var(--violet-7)
+        background: unset
+        min-height: 40px
+        padding: 16px
+        border: unset
+        line-height: 177%
+        font-family: inherit
+
+        &:focus
+            box-shadow: 0 0 0 2px var(--violet-8)
+
+        &::placeholder
+            color: var(--gray-10)
+
+.input_wrapper
+    display: flex
+    align-items: center
+    width: 100%
+    column-gap: 16px
+
+.input_wrapper
+    display: grid
+    grid-template-columns: 24px auto 24px
+    grid-template-rows: auto
+    position: relative
+    align-items: center
+    width: 100%
+    column-gap: 8px
+
+.input_container
+    position: relative
+    display: flex
+    align-items: center
+    grid-column: 1 / span 3
+
+    div
+        &:nth-of-type(1)
+            width: 100%
+            background: unset
+
+.with_prefix
+    grid-column: 2 / span 2!important
+
+.with_postfix
+    grid-column: 1 / span 2!important
+
+.with_prefix_postfix
+    grid-column: 2 / span 1 !important
+
+.prefix
+    grid-column: 1 / 1
+    grid-row: 1 / 1
+
+.postfix
+    display: flex
+    align-items: center
+    grid-column: 3 / span 1
+    grid-row: 1 / 1
+
+.error
+    div
+        line-height: 1
+        font-size: 14px
+        color: var(--red-9)
+
+    textarea
+        box-shadow: 0 0 0 1px var(--red-9)
+
+.error_container
+    position: absolute
+    display: flex
+    align-items: center
+    justify-content: center
+    width: 18px
+    height: 18px
+    right: 8px
+    top: 16px

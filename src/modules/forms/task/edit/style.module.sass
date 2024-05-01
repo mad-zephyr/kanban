@@ -1,0 +1,61 @@
+.form
+    display: flex
+    flex-direction: column
+    row-gap: 24px
+
+.header
+    display: flex
+    column-gap: 12px
+
+    &_content
+        font-weight: 700
+        font-size: 18px
+        color: var(--background-contrast)
+        flex-grow: 1
+
+.description
+    font-weight: 500
+    font-size: 13px
+    line-height: 177%
+    color: var(--gray-11)
+
+.btn
+    cursor: pointer
+
+    &_wide
+        width: 100%
+
+    &_primary
+        background: var(--violet-9)
+
+    &_secondary
+        background: var(--violet-11)
+
+.row
+    display: flex
+    flex-direction: column
+    width: 100%
+    row-gap: 24px
+
+.list
+    display: flex
+    flex-direction: column
+    align-items: flex-start
+    row-gap: 8px
+
+    li
+        list-style: none
+        width: 100%
+
+    span
+        margin-bottom: 0
+
+.dropdown
+    all: unset
+    height: 35px
+    width: 35px
+    display: flex
+    align-items: center
+    justify-content: center
+    cursor: pointer
+    z-index: 3
