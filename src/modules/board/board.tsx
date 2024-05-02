@@ -66,6 +66,7 @@ export const Board: FC = () => {
                     onClick={() => setEditedTask(task)}
                     key={task.id}
                     data={task}
+                    progressBg={status.bg}
                   />
                 ))}
               </div>
