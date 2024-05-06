@@ -58,7 +58,7 @@ export const EditBoardForm: FC<TEditBoardForm> = ({ onClose }) => {
     resolver: zodResolver(EditBoardFormSchema),
   })
 
-  const { handleSubmit, control, reset } = methods
+  const { handleSubmit, control } = methods
 
   const {
     fields: columnFields,

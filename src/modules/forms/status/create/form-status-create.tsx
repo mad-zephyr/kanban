@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import { FC, useState } from 'react'
 import {
   Controller,
   SubmitHandler,
@@ -44,6 +44,9 @@ type TCreateBoardForm = {
 }
 
 const CreateTaskStatusesForm: FC<TCreateBoardForm> = ({ onClose }) => {
+  const [colorPickerContainer, setColorPickerContainer] =
+    useState<HTMLElement | null>(null)
+
   const activeBoard = useAppContext((state) =>
     state.boards.find((board) => board.id === state.activeBoardId)
   )
@@ -89,7 +92,11 @@ const CreateTaskStatusesForm: FC<TCreateBoardForm> = ({ onClose }) => {
   }
 
   return (
-    <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
+    <form
+      className={styles.form}
+      onSubmit={handleSubmit(onSubmit)}
+      ref={setColorPickerContainer}
+    >
       <Flex direction={'column'} gap={'4'} align={'center'}>
         <ul className={styles.list}>
           {columnStatuses.map((status, index) => (
@@ -110,7 +117,10 @@ const CreateTaskStatusesForm: FC<TCreateBoardForm> = ({ onClose }) => {
                         name={`statuses.${index}.bg`}
                         control={control}
                         render={({ field, fieldState }) => (
-                          <ColorPickerDrop field={field} />
+                          <ColorPickerDrop
+                            field={field}
+                            container={colorPickerContainer}
+                          />
                         )}
                       />
                     }

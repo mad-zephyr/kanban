@@ -48,7 +48,7 @@ export const ColorPickerDrop = forwardRef<HTMLDivElement, TColorPicker>(
     }, [background])
 
     return (
-      <div ref={ref}>
+      <div>
         <RootDropdown>
           <Trigger asChild>
             <div role="button" className={cn(styles.btn, className)}>
