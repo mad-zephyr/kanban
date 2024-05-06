@@ -52,13 +52,16 @@ export const FormTaskEdit: FC<TFormTaskEdit> = ({ onClose, onEdit, task }) => {
   }
 
   const onSubmit: SubmitHandler<CombinedTaskFormSchemaType> = (currentTask) => {
-    updateTask({
-      id: currentTask.id,
-      statusID: currentTask.statusID,
-      name: currentTask.name,
-      subTasks: currentTask?.subTasks || [],
-      description: currentTask?.description || '',
-    })
+    updateTask(
+      {
+        id: currentTask.id,
+        statusID: currentTask.statusID,
+        name: currentTask.name,
+        subTasks: currentTask?.subTasks || [],
+        description: currentTask?.description || '',
+      },
+      currentTask.statusID
+    )
     setEditedTask({
       ...currentTask,
       description: currentTask?.description || '',
