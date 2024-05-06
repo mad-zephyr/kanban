@@ -34,7 +34,8 @@ export const FormTaskEdit: FC<TFormTaskEdit> = ({ onClose, onEdit, task }) => {
     onEdit(isEdit)
   }
 
-  const { updateTask, deleteTask, setEditedTask } = useAppContext.getState()
+  const { updateTask, deleteTask, setEditedTask, reorderTask } =
+    useAppContext.getState()
 
   const { handleSubmit, control } = methods
 
@@ -52,16 +53,21 @@ export const FormTaskEdit: FC<TFormTaskEdit> = ({ onClose, onEdit, task }) => {
   }
 
   const onSubmit: SubmitHandler<CombinedTaskFormSchemaType> = (currentTask) => {
-    updateTask(
-      {
-        id: currentTask.id,
-        statusID: currentTask.statusID,
-        name: currentTask.name,
-        subTasks: currentTask?.subTasks || [],
-        description: currentTask?.description || '',
-      },
-      currentTask.statusID
-    )
+    const updTask = {
+      id: currentTask.id,
+      statusID: currentTask.statusID,
+      name: currentTask.name,
+      subTasks: currentTask?.subTasks || [],
+      description: currentTask?.description || '',
+    }
+
+    if (task.statusID !== currentTask.statusID) {
+      reorderTask(updTask, task.statusID)
+      onClose()
+    } else {
+      updateTask(updTask)
+    }
+
     setEditedTask({
       ...currentTask,
       description: currentTask?.description || '',

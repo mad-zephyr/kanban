@@ -1,6 +1,6 @@
 import { FC, useEffect, useState } from 'react'
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form'
-import { Flex, IconButton, Text } from '@radix-ui/themes'
+import { IconButton, Text } from '@radix-ui/themes'
 import cn from 'classnames'
 import { Cross1Icon, Cross2Icon, DotsVerticalIcon } from '@radix-ui/react-icons'
 import { Item } from '@radix-ui/react-dropdown-menu'
@@ -28,7 +28,7 @@ export const FormTaskShow: FC<TFormTaskEdit> = ({ onClose, onEdit, task }) => {
     state.boards.find((board) => board.id === state.activeBoardId)
   )
 
-  const { updateTask, deleteTask } = useAppContext.getState()
+  const { updateTask, deleteTask, reorderTask } = useAppContext.getState()
 
   const { control, watch } = methods
 
@@ -44,18 +44,22 @@ export const FormTaskShow: FC<TFormTaskEdit> = ({ onClose, onEdit, task }) => {
 
   useEffect(() => {
     const { unsubscribe } = watch((updTask) => {
-      updateTask(
-        {
-          ...task,
-          statusID: updTask.statusID || '',
-          subTasks: updTask.subTasks as unknown as SubTask[],
-        },
-        task.statusID
-      )
+      const taskToUpdate = {
+        ...task,
+        statusID: updTask.statusID || '',
+        subTasks: updTask.subTasks as SubTask[],
+      }
+
+      if (task.statusID !== updTask.statusID) {
+        reorderTask(taskToUpdate, task.statusID)
+        onClose()
+      } else {
+        updateTask(taskToUpdate)
+      }
     })
 
     return () => unsubscribe()
-  }, [task, updateTask, watch])
+  }, [reorderTask, task, updateTask, watch])
 
   return (
     <form className={styles.form} ref={setDropDownContainer}>

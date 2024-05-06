@@ -41,7 +41,8 @@ export type TodoSliceAction = {
   removeBoard: (boardId: string) => void
 
   createTask: (task: Task) => void
-  updateTask: (task: Task, previousStatusId: string) => void
+  updateTask: (task: Task) => void
+  reorderTask: (task: Task, previousStatusId: string) => void
   deleteTask: (task: Task) => void
 
   updateTasks: (tasks: Tasks) => void
@@ -100,18 +101,11 @@ export const todoContext = (
       }
     }),
 
-  updateTask: (updatedTask: Task, previousStatusId: string) =>
+  updateTask: (updatedTask: Task) =>
     set((state) => {
-      const sourceTasks = state.tasks[previousStatusId]
       const destinationTasks = state.tasks[updatedTask.statusID]?.length
         ? state.tasks[updatedTask.statusID]
         : []
-
-      const sourceTaskIndex = sourceTasks.findIndex(
-        (task) => task.id === updatedTask.id
-      )
-
-      sourceTasks.splice(sourceTaskIndex, 1)
 
       const taskIndexToUpdate = destinationTasks.findIndex(
         (task) => task.id === updatedTask.id
@@ -126,6 +120,27 @@ export const todoContext = (
         tasks: {
           ...state.tasks,
           [updatedTask.statusID]: updatedTasks,
+        },
+      }
+    }),
+
+  reorderTask: (updatedTask: Task, previousStatusId: string) =>
+    set((state) => {
+      const destinationTasks = state.tasks[updatedTask.statusID]
+      const sourceTasks = state.tasks[previousStatusId]
+
+      const sourceTaskIndex = sourceTasks.findIndex(
+        (task) => task.id === updatedTask.id
+      )
+
+      sourceTasks.splice(sourceTaskIndex, 1)
+
+      destinationTasks.push(updatedTask)
+
+      return {
+        tasks: {
+          ...state.tasks,
+          [updatedTask.statusID]: destinationTasks,
           [previousStatusId]: sourceTasks,
         },
       }

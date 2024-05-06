@@ -47,7 +47,6 @@ export const Board: FC = () => {
   const onDragEnd = (result: DropResult, provided: ResponderProvided) => {
     const { destination, draggableId, type, source } = result
 
-    console.log('DRAAAAD', result)
     if (!destination || !draggableId) {
       return
     }
