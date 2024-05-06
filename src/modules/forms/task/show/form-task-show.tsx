@@ -1,14 +1,14 @@
 import { FC, useEffect, useState } from 'react'
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form'
-import { IconButton, Text } from '@radix-ui/themes'
+import { Flex, IconButton, Text } from '@radix-ui/themes'
 import cn from 'classnames'
-import { Cross1Icon, DotsVerticalIcon } from '@radix-ui/react-icons'
+import { Cross1Icon, Cross2Icon, DotsVerticalIcon } from '@radix-ui/react-icons'
 import { Item } from '@radix-ui/react-dropdown-menu'
 
 import { Checkbox, DropDown, Label, Select } from '@/components/ui'
 import { useAppContext } from '@/context/app.context'
 import type { SubTask, Task } from '@/context/todo.context'
-import { CombinedTaskFormSchemaType } from '@/modules/board/components/board-task/components/combined-form/board-task-combineed-form'
+import { CombinedTaskFormSchemaType } from '@/modules/board/components/board-task/components/combined-form/board-task-combined-form'
 
 import styles from './style.module.sass'
 
@@ -25,7 +25,7 @@ export const FormTaskShow: FC<TFormTaskEdit> = ({ onClose, onEdit, task }) => {
     useState<HTMLElement | null>(null)
 
   const currentBoard = useAppContext((state) =>
-    state.boards.find((board) => board.id === state.activeBoardID)
+    state.boards.find((board) => board.id === state.activeBoardId)
   )
 
   const { updateTask, deleteTask } = useAppContext.getState()
@@ -38,7 +38,7 @@ export const FormTaskShow: FC<TFormTaskEdit> = ({ onClose, onEdit, task }) => {
   })
 
   const handleDeleteTask = () => {
-    deleteTask(task.id)
+    deleteTask(task)
     onClose()
   }
 
@@ -59,29 +59,43 @@ export const FormTaskShow: FC<TFormTaskEdit> = ({ onClose, onEdit, task }) => {
       <div className={styles.row}>
         <div className={styles.header}>
           <Text className={styles.header_content}>{task.name}</Text>
-          <DropDown
-            className={styles.dropdown}
-            container={dropDownContainer}
-            triger={
-              <IconButton variant="ghost">
-                <DotsVerticalIcon />
-              </IconButton>
-            }
-            drowDownProps={{ sideOffset: 12 }}
-            content={
-              <>
-                <Item onClick={() => onEdit(true)} className="DropdownMenuItem">
-                  Edit Task
-                </Item>
-                <Item
-                  onClick={handleDeleteTask}
-                  className={cn('DropdownMenuItem', styles.itemDelete)}
-                >
-                  Delete Task
-                </Item>
-              </>
-            }
-          />
+          <div className={styles.compact}>
+            <DropDown
+              className={styles.dropdown}
+              container={dropDownContainer}
+              triger={
+                <IconButton variant="ghost">
+                  <DotsVerticalIcon />
+                </IconButton>
+              }
+              drowDownProps={{ sideOffset: 12 }}
+              content={
+                <>
+                  <Item
+                    onClick={() => onEdit(true)}
+                    className="DropdownMenuItem"
+                  >
+                    Edit Task
+                  </Item>
+                  <Item
+                    onClick={handleDeleteTask}
+                    className={cn('DropdownMenuItem', styles.itemDelete)}
+                  >
+                    Delete Task
+                  </Item>
+                </>
+              }
+            />
+            <IconButton
+              size={'2'}
+              variant="ghost"
+              aria-label="Close"
+              className={styles.close}
+              onClick={onClose}
+            >
+              <Cross2Icon />
+            </IconButton>
+          </div>
         </div>
         <Text className={styles.description}>{task.description}</Text>
       </div>

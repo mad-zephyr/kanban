@@ -8,7 +8,7 @@ import { TodoContext, todoContext } from './todo.context'
 
 type AppContext = SystemContext & TodoContext
 
-const $STORAGE_NAME = 'kanban_store'
+const $STORAGE_NAME = 'kanban_store_v1'
 
 export const useAppContext = create<AppContext>()(
   persist(

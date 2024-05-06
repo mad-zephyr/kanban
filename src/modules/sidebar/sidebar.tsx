@@ -26,7 +26,7 @@ export const Sidebar: FC = () => {
   const lightThemeOff = useAppContext((state) => !state.lightTheme)
   const sidebarOpen = useAppContext((state) => state.sidebarOpen)
   const boards = useAppContext((state) => state.boards)
-  const activeBoardID = useAppContext((state) => state.activeBoardID)
+  const activeBoardID = useAppContext((state) => state.activeBoardId)
 
   const { setLightTheme, setSidebarOpen, setActiveBoard } =
     useAppContext.getState()
@@ -85,13 +85,13 @@ export const Sidebar: FC = () => {
           onClick={setSidebarOpen}
         />
       </aside>
-      <Button
-        onClick={setSidebarOpen}
-        size={'4'}
+      <div
         className={cn(styles.btnShow, { [styles.btnShow_hide]: !sidebarOpen })}
       >
-        <ShowIcon />
-      </Button>
+        <Button onClick={setSidebarOpen} size={'4'}>
+          <ShowIcon />
+        </Button>
+      </div>
 
       <Modal
         isOpen={isShow}

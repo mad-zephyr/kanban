@@ -1,5 +1,9 @@
 import { StoreApi } from 'zustand'
 
+type Toast = {
+  id: string
+}
+
 export interface SystemSliceContext {
   lightTheme: boolean
   sidebarOpen: boolean

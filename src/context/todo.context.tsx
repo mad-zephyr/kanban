@@ -11,7 +11,7 @@ export type Task = {
   name: string
   description: string
   statusID: string
-  subTasks: SubTask[] | []
+  subTasks: SubTask[]
 }
 
 export type BoardStatus = {
@@ -26,26 +26,28 @@ export type Board = {
   statuses: BoardStatus[]
 }
 
+type Tasks = Record<BoardStatus['id'], Task[]>
+
 export type TodoSliceContext = {
-  tasks: Task[]
-  editedTask?: Task
   boards: Board[]
-  activeBoardID: string
+  editedTask?: Task
+  activeBoardId: string
+  tasks: Tasks
 }
 
 export type TodoSliceAction = {
-  createTask: (task: Task) => void
-  updateTask: (task: Task) => void
-  deleteTask: (taskId: string) => void
-  setEditedTask: (task?: Task) => void
-
   addBoard: (board: Board) => void
   updateBoard: (board: Board) => void
-  setActiveBoard: (boardId: string) => void
   removeBoard: (boardId: string) => void
 
-  // TO DO
-  // addBoard: (board: Board) => void
+  createTask: (task: Task) => void
+  updateTask: (task: Task) => void
+  deleteTask: (task: Task) => void
+
+  updateTasks: (tasks: Tasks) => void
+
+  setActiveBoard: (boardId: string) => void
+  setEditedTask: (task?: Task) => void
 }
 
 export type TodoContext = TodoSliceContext & TodoSliceAction
@@ -54,15 +56,14 @@ export const todoContext = (
   set: StoreApi<TodoContext>['setState'],
   get: StoreApi<TodoContext>['getState']
 ) => ({
+  activeBoardId: '',
   boards: [],
-  tasks: [],
-  editedTask: undefined,
-  activeBoardID: '',
+  tasks: {},
 
   addBoard: (board: Board) =>
     set((state) => ({
-      boards: state?.boards ? [...state.boards, board] : [board],
-      activeBoardID: board.id,
+      boards: state.boards.length ? [...state.boards, board] : [board],
+      activeBoardId: board.id,
     })),
 
   updateBoard: (board: Board) =>
@@ -74,35 +75,99 @@ export const todoContext = (
     }),
 
   setActiveBoard: (boardID: string) =>
-    set((state) => ({
-      activeBoardID: boardID,
-    })),
+    set((state) => {
+      return {
+        activeBoardId: boardID,
+      }
+    }),
 
   removeBoard: (boardID: string) =>
     set((state) => ({
       boards: state.boards.filter((board) => board.id !== boardID),
+      activeBoardId: undefined,
     })),
 
   createTask: (task: Task) =>
-    set((state) => ({
-      tasks: [...state.tasks, task],
-    })),
+    set((state) => {
+      const currentTasks = state.tasks[task.statusID]
+      const updTasks = currentTasks?.length ? [...currentTasks, task] : [task]
+
+      return {
+        tasks: {
+          ...state.tasks,
+          [task.statusID]: updTasks,
+        },
+      }
+    }),
 
   updateTask: (updatedTask: Task) =>
     set((state) => {
-      const taskIndexToUpdate = state.tasks.findIndex(
+      const currentTasks = state.tasks[updatedTask.statusID]
+
+      const taskIndexToUpdate = currentTasks.findIndex(
         (task) => task.id === updatedTask.id
       )
 
-      return { tasks: state.tasks.toSpliced(taskIndexToUpdate, 1, updatedTask) }
+      const updatedTasks = currentTasks.toSpliced(
+        taskIndexToUpdate,
+        1,
+        updatedTask
+      )
+
+      return {
+        tasks: {
+          ...state.tasks,
+          [updatedTask.statusID]: updatedTasks,
+        },
+      }
     }),
 
-  deleteTask: (taskId: string) =>
-    set((state) => {
-      const taskIndex = state.tasks.findIndex((task) => task.id === taskId)
+  updateTasks: (updatedTasks: Tasks) =>
+    set((state) => ({ tasks: updatedTasks })),
 
-      return { tasks: state.tasks.toSpliced(taskIndex, 1) }
+  deleteTask: (taskToDelete: Task) =>
+    set((state) => {
+      const currentTasks = state.tasks[taskToDelete.statusID]
+      const taskIndexToDelete = currentTasks.findIndex(
+        (task) => task.id === taskToDelete.id
+      )
+
+      const updatedTasks = currentTasks.toSpliced(taskIndexToDelete, 1)
+
+      return {
+        tasks: {
+          ...state.tasks,
+          [taskToDelete.statusID]: updatedTasks,
+        },
+      }
     }),
 
   setEditedTask: (task?: Task) => set((state) => ({ editedTask: task })),
 })
+
+function getElementAndIndex<T extends { id: string }>(
+  elemArray: Array<T>,
+  id: string
+): [T | undefined, number] {
+  const elem = elemArray.find((elem) => elem.id === id)
+  const elemIndex = elemArray.findIndex((elem) => elem.id === id)
+
+  return [elem, elemIndex]
+}
+
+function updateArray<T>(elemArray: T[], elem: T, index: number) {
+  return elemArray.toSpliced(index, 1, elem)
+}
+
+function groupTasksByStatusId(statuses: BoardStatus[], allTasks: Task[]) {
+  return statuses.reduce<Record<BoardStatus['id'], Task[]>>((all, status) => {
+    const taskLinkedWithStatus = allTasks.filter(
+      (task) => task.statusID === status.id
+    )
+
+    return {
+      ...all,
+      [status.id]: taskLinkedWithStatus,
+    }
+  }, {})
+}

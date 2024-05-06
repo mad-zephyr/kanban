@@ -1,61 +1,56 @@
-import { FC, useState } from 'react'
-import { Button } from '@radix-ui/themes'
+import { FC, ReactNode, useRef } from 'react'
+import cn from 'classnames'
+import { Droppable, DroppableStateSnapshot } from 'react-beautiful-dnd'
 
-import { useAppContext } from '@/context/app.context'
-import Modal from '@/components/ui/modal/modal'
-import CreateTaskStatusesForm from '@/modules/forms/status/create/form-status-create'
+import { BoardStatus, Task } from '@/context/todo.context'
 
 import styles from './styles.module.sass'
+import { BoardTask } from '../board-task/board-task'
 
-export const BoardColumn: FC = () => {
-  const activeBoard = useAppContext((state) =>
-    state.boards.find((board) => board.id === state.activeBoardID)
-  )
-  const [showCreateStatusModal, setShowCreateStatusModal] = useState(false)
-  const handleCloseModal = () => {
-    setShowCreateStatusModal((prev) => !prev)
-  }
+type TBoardColumn = {
+  column: BoardStatus
+  tasks: Task[]
+}
 
-  const handleAddStatus = () => {
-    handleCloseModal()
-  }
+type D = {
+  ddd: DroppableStateSnapshot
+}
 
-  const statusesQty = activeBoard?.statuses.length
+export const BoardColumn: FC<TBoardColumn> = ({ tasks = [], column }) => {
+  const ref = useRef<HTMLDivElement>(null)
 
   return (
-    <>
-      {statusesQty ? (
-        <div className={styles.main}>
-          <span onClick={handleAddStatus} className={styles.text}>
-            + New Column
-          </span>
-        </div>
-      ) : (
-        <div className={styles.main_expanded}>
-          {!!activeBoard ? (
-            <>
-              <span className={styles.text}>
-                This board is empty. Create a new column to get started.
-              </span>
-              <Button
-                onClick={handleAddStatus}
-                size={'4'}
-                className={styles.btn}
-              >
-                + Add New Column
-              </Button>
-            </>
-          ) : (
-            <span className={styles.text}>
-              Select an existing board or create a new one
-            </span>
-          )}
-        </div>
-      )}
+    <div ref={ref} className={styles.column}>
+      <div className={styles.header}>
+        <div className={styles.indicator} style={{ background: column.bg }} />
+        <span>
+          {column.name} <sup>{tasks?.length}</sup>
+        </span>
+      </div>
 
-      <Modal isOpen={showCreateStatusModal} onOpenChange={handleCloseModal}>
-        <CreateTaskStatusesForm onClose={handleCloseModal} />
-      </Modal>
-    </>
+      <Droppable droppableId={column.id} type="COLUMN">
+        {(provided, dropState) => (
+          <div
+            className={cn(styles.column_content, {
+              [styles.column_empty]: !tasks.length,
+            })}
+            {...provided.droppableProps}
+            {...dropState}
+            data-using-placeholder={dropState.isUsingPlaceholder}
+            ref={provided.innerRef}
+          >
+            {tasks?.map((task, index) => (
+              <BoardTask
+                index={index}
+                key={task.id}
+                data={task}
+                progressBg={column.bg}
+              />
+            ))}
+            {provided.placeholder}
+          </div>
+        )}
+      </Droppable>
+    </div>
   )
 }

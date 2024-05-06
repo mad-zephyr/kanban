@@ -3,13 +3,15 @@ import { FormProvider, useForm } from 'react-hook-form'
 import { z } from 'zod'
 
 import { FormTaskEdit, FormTaskShow } from '@/modules/forms'
-import { Task } from '@/context/todo.context'
 import { useAppContext } from '@/context/app.context'
 
 const CombinedTaskFormSchema = z.object({
   id: z.string(),
-  name: z.string().trim().min(4, { message: 'Reqired' }),
-  description: z.string().trim().min(4, { message: 'Reqired' }),
+  name: z
+    .string()
+    .trim()
+    .min(4, { message: 'The name must consist of at least 4 letters' }),
+  description: z.string().trim().optional(),
   statusID: z.string(),
   subTasks: z.array(
     z.object({
@@ -31,7 +33,7 @@ export const BoardTaskCombinedForm: FC<TBoardTaskForm> = ({
 }) => {
   const [editMode, setEditMode] = useState(false)
   const editedTask = useAppContext((state) => state.editedTask)
-  const { setEditedTask } = useAppContext.getState()
+
   const methods = useForm<CombinedTaskFormSchemaType>({
     defaultValues: editedTask,
   })

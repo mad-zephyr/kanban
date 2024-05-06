@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import { FC, useState } from 'react'
 import {
   Controller,
   SubmitHandler,
@@ -7,23 +7,29 @@ import {
 } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
-import { Button, IconButton } from '@radix-ui/themes'
+import { Button, Flex, IconButton } from '@radix-ui/themes'
 import cn from 'classnames'
 import { v4 as uuidv4 } from 'uuid'
 import { Cross1Icon } from '@radix-ui/react-icons'
 
-import { ColorPicker, Input } from '@/components/ui'
+import { ColorPickerDrop, Input } from '@/components/ui'
 import { useAppContext } from '@/context/app.context'
 import { BoardStatus } from '@/context/todo.context'
 
 import styles from './style.module.sass'
 
 const CreateBoardFormSchema = z.object({
-  boardName: z.string().trim().min(4, { message: 'Required' }),
+  boardName: z
+    .string()
+    .trim()
+    .min(4, { message: 'The name must consist of at least 4 letters' }),
   statuses: z.array(
     z.object({
-      value: z.string().trim().min(4, { message: 'Provide column name' }),
+      value: z.string().trim().min(3, {
+        message: 'The status name must consist of at least 3 letters',
+      }),
       bg: z.string(),
+      id: z.string(),
     })
   ),
 })
@@ -35,13 +41,18 @@ type TCreateBoardForm = {
 }
 
 const CreateBoardForm: FC<TCreateBoardForm> = ({ onClose }) => {
+  const [colorPickerContainer, setColorPickerContainer] =
+    useState<HTMLElement | null>(null)
   const { addBoard } = useAppContext.getState()
   const methods = useForm<CreateBoardFormSchemaType>({
     shouldFocusError: true,
     disabled: false,
     defaultValues: {
       boardName: '',
-      statuses: [],
+      statuses: [
+        { bg: 'green', id: uuidv4(), value: '' },
+        { bg: 'green', id: uuidv4(), value: '' },
+      ],
     },
     resolver: zodResolver(CreateBoardFormSchema),
   })
@@ -58,7 +69,7 @@ const CreateBoardForm: FC<TCreateBoardForm> = ({ onClose }) => {
   })
 
   const handleAddColumn = () => {
-    append({ value: '', bg: '#B4D455' }, { shouldFocus: false })
+    append({ value: '', bg: '#B4D455', id: uuidv4() }, { shouldFocus: false })
   }
 
   const onSubmit: SubmitHandler<CreateBoardFormSchemaType> = (board) => {
@@ -80,54 +91,73 @@ const CreateBoardForm: FC<TCreateBoardForm> = ({ onClose }) => {
   }
 
   return (
-    <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
+    <form
+      className={styles.form}
+      onSubmit={handleSubmit(onSubmit)}
+      ref={setColorPickerContainer}
+    >
       <Controller
         name="boardName"
         control={control}
         rules={{ required: true }}
         render={({ field, fieldState }) => (
-          <Input label="Board Name *" field={field} fieldState={fieldState} />
+          <Input
+            placeholder="e.g. Project Name - [Month/Year]"
+            label="Board Name *"
+            field={field}
+            fieldState={fieldState}
+          />
         )}
       />
 
-      <ul className={styles.list}>
-        {columnStatuses.map((status, index) => (
-          <li key={status.id}>
-            <Controller
-              name={`statuses.${index}.value`}
-              control={control}
-              rules={{ required: true }}
-              render={({ field, fieldState }) => (
-                <Input
-                  label={index == 0 ? 'Board Columns *' : ''}
-                  name={'value'}
-                  field={field}
-                  fieldState={fieldState}
-                  prefix={
-                    <Controller
-                      name={`statuses.${index}.bg`}
-                      control={control}
-                      render={({ field }) => <ColorPicker field={field} />}
-                    />
-                  }
-                  postfix={
-                    <IconButton variant="ghost" onClick={() => remove(index)}>
-                      <Cross1Icon />
-                    </IconButton>
-                  }
-                />
-              )}
-            />
-          </li>
-        ))}
+      <Flex direction={'column'} gap={'4'} align={'center'}>
+        <ul className={styles.list}>
+          {columnStatuses.map((status, index) => (
+            <li key={status.id}>
+              <Controller
+                name={`statuses.${index}.value`}
+                control={control}
+                rules={{ required: true }}
+                render={({ field, fieldState }) => (
+                  <Input
+                    label={index == 0 ? 'Board Columns *' : ''}
+                    name={'value'}
+                    field={field}
+                    fieldState={fieldState}
+                    placeholder={'Add Status (e.g., In Progress, QA, Done)'}
+                    prefix={
+                      <Controller
+                        name={`statuses.${index}.bg`}
+                        control={control}
+                        render={({ field }) => (
+                          <ColorPickerDrop
+                            field={field}
+                            container={colorPickerContainer}
+                          />
+                        )}
+                      />
+                    }
+                    postfix={
+                      <IconButton variant="ghost" onClick={() => remove(index)}>
+                        <Cross1Icon />
+                      </IconButton>
+                    }
+                  />
+                )}
+              />
+            </li>
+          ))}
+        </ul>
         <Button
+          variant="ghost"
           size={'3'}
           onClick={handleAddColumn}
-          className={cn(styles.btn_wide, styles.btn_secondary)}
+          style={{ width: 'calc(100% - 24px)' }}
+          className={`${(styles.btn, styles.btn_wide, styles.btn_secondary)}`}
         >
           + Add New Column
         </Button>
-      </ul>
+      </Flex>
 
       <Button
         size={'3'}

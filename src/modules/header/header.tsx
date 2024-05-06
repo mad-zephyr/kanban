@@ -5,7 +5,7 @@ import { FC, useState } from 'react'
 import cn from 'classnames'
 import { Item } from '@radix-ui/react-dropdown-menu'
 
-import { DropDown } from '@/components/ui'
+import { DropDown, Toaster, useToast } from '@/components/ui'
 import { useAppContext } from '@/context/app.context'
 import LogoDark from '@/assets/logo-light.svg'
 import LogoLight from '@/assets/logo-dark.svg'
@@ -37,7 +37,7 @@ export const Header: FC = () => {
   const [isShowAddTaskModal, setIsShowAddTaskModal] = useState(false)
 
   const currentBoard = useAppContext((state) =>
-    state.boards.find((board) => board.id === state.activeBoardID)
+    state.boards.find((board) => board.id === state.activeBoardId)
   )
 
   const canAddTask = !!currentBoard?.statuses.length

@@ -1,37 +1,42 @@
-.main
+.column
     display: flex
     flex-direction: column
+    width: 280px
+
+.header
+    display: flex
     align-items: center
-    justify-content: center
-    min-width: 280px
-    max-width: 100%
-    background: linear-gradient(180deg, var(--gray-2) 0%, var(--color-background) 100%)
-    height: calc(100% - 48px)
-    margin-top: 48px
-    border-radius: 6px
-    max-width: 280px
+    column-gap: 12px
+    margin-bottom: 24px
 
-    &_expanded
-        display: flex
-        flex-direction: column
-        align-items: center
-        width: 100%
-        height: 100%
-        justify-content: center
-        text-align: center
-        row-gap: 12px
-        grid-column: 1 / span 2
+.indicator
+    display: block
+    width: 16px
+    height: 16px
+    border-radius: 16px
 
-.text
-    font-weight: 700
-    font-size: 18px
-    text-align: center
-    color: var(--gray-9)
-    cursor: pointer
+.column_content
+    position: relative
+    display: flex
+    flex-direction: column
+    height: 100%
+    border-radius: 8px
 
-    &:hover
-        color: var(--gray-8)
+    &[data-using-placeholder='true']
+        &:before
+            content: ""
+            position: absolute
+            width: 100%
+            height: 100%
+            top: -1px
+            left: -1px
+            border: 1px dashed var(--gray-6)
+            border-radius: 8px
+            z-index: -1
 
-.btn
-    background: var(--violet-9)
-    cursor: pointer
+.column_over
+    background: var(--gray-5)
+
+.column_empty
+    border: 1px dashed var(--gray-5)
+    opacity: 0.8

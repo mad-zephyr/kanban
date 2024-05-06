@@ -1,0 +1,37 @@
+.main
+    display: flex
+    flex-direction: column
+    align-items: center
+    justify-content: center
+    min-width: 280px
+    max-width: 100%
+    background: linear-gradient(180deg, var(--gray-2) 0%, var(--color-background) 100%)
+    height: calc(100% - 48px)
+    margin-top: 48px
+    border-radius: 6px
+    max-width: 280px
+
+    &_expanded
+        display: flex
+        flex-direction: column
+        align-items: center
+        width: 100%
+        height: 100%
+        justify-content: center
+        text-align: center
+        row-gap: 12px
+        grid-column: 1 / span 2
+
+.text
+    font-weight: 700
+    font-size: 18px
+    text-align: center
+    color: var(--gray-9)
+    cursor: pointer
+
+    &:hover
+        color: var(--gray-8)
+
+.btn
+    background: var(--violet-9)
+    cursor: pointer

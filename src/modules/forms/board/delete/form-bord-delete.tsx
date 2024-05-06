@@ -13,7 +13,7 @@ type TDeleteBoardForm = {
 export const DeleteBoardForm: FC<TDeleteBoardForm> = ({ onClose }) => {
   const removeBoard = useAppContext.getState().removeBoard
   const activeBoard = useAppContext((state) =>
-    state.boards.find((board) => board.id === state.activeBoardID)
+    state.boards.find((board) => board.id === state.activeBoardId)
   )
 
   const handleDelete = () => {

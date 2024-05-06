@@ -1,11 +1,9 @@
 .content
     display: grid
-    // width: -webkit-fill-available
     grid-row: 2 / span 1
     grid-column: 2 / span 1
     padding: 24px
     grid-template-columns: minmax(min-content, 280px)
-    // overflow-x: auto
     grid-auto-flow: column
     column-gap: 20px
     overflow-x: scroll
@@ -20,34 +18,6 @@
     grid-auto-flow: column
     justify-content: start
     column-gap: 20px
-
-.column
-    display: flex
-    flex-direction: column
-    width: 280px
-
-.column_content
-    display: flex
-    flex-direction: column
-    height: 100%
-    border-radius: 8px
-    row-gap: 20px
-
-.column_empty
-    border: 1px solid var(--gray-5)
-    opacity: 0.8
-
-.header
-    display: flex
-    align-items: center
-    column-gap: 12px
-    margin-bottom: 24px
-
-.indicator
-    display: block
-    width: 16px
-    height: 16px
-    border-radius: 16px
 
 // :root, .dark, .dark-theme, :is(.dark, .dark-theme)
 //     :where(.radix-themes:not(.light, .light-theme))

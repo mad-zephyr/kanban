@@ -7,26 +7,29 @@ import {
 } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
-import { Button, IconButton } from '@radix-ui/themes'
+import { Button, Flex, IconButton } from '@radix-ui/themes'
 import cn from 'classnames'
 import { v4 as uuidv4 } from 'uuid'
 import { Cross1Icon } from '@radix-ui/react-icons'
 
-import { ColorPicker, Input } from '@/components/ui'
+import { ColorPickerDrop, Input } from '@/components/ui'
 import { useAppContext } from '@/context/app.context'
 
 import styles from './style.module.sass'
 
 const DEFAULT_STATUS = {
-  name: 'Set new status / column name',
+  name: '',
   bg: '#B4D455',
+  id: uuidv4(),
 }
 
 const CreateStatusTaskFormSchema = z.object({
   statuses: z.array(
     z.object({
       id: z.string(),
-      name: z.string().trim().min(4, { message: 'Provide column name' }),
+      name: z.string().trim().min(3, {
+        message: 'The status name must consist of at least 3 letters',
+      }),
       bg: z.string(),
     })
   ),
@@ -42,7 +45,7 @@ type TCreateBoardForm = {
 
 const CreateTaskStatusesForm: FC<TCreateBoardForm> = ({ onClose }) => {
   const activeBoard = useAppContext((state) =>
-    state.boards.find((board) => board.id === state.activeBoardID)
+    state.boards.find((board) => board.id === state.activeBoardId)
   )
 
   const { updateBoard } = useAppContext.getState()
@@ -53,12 +56,12 @@ const CreateTaskStatusesForm: FC<TCreateBoardForm> = ({ onClose }) => {
     defaultValues: {
       statuses: !!activeBoard?.statuses.length
         ? activeBoard?.statuses
-        : [{ ...DEFAULT_STATUS, id: uuidv4() }],
+        : [DEFAULT_STATUS],
     },
     resolver: zodResolver(CreateStatusTaskFormSchema),
   })
 
-  const { handleSubmit, control, formState } = methods
+  const { handleSubmit, control } = methods
 
   const {
     fields: columnStatuses,
@@ -87,48 +90,52 @@ const CreateTaskStatusesForm: FC<TCreateBoardForm> = ({ onClose }) => {
 
   return (
     <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
-      <ul className={styles.list}>
-        {columnStatuses.map((status, index) => (
-          <li key={status.id}>
-            <Controller
-              name={`statuses.${index}.name`}
-              control={control}
-              rules={{ required: true }}
-              render={({ field, fieldState }) => (
-                <Input
-                  label={index == 0 ? 'Board Columns *' : ''}
-                  name={'value'}
-                  field={field}
-                  fieldState={fieldState}
-                  placeholder="Status name"
-                  prefix={
-                    <Controller
-                      name={`statuses.${index}.bg`}
-                      control={control}
-                      render={({ field, fieldState }) => (
-                        <ColorPicker field={field} />
-                      )}
-                    />
-                  }
-                  postfix={
-                    <IconButton variant="ghost" onClick={() => remove(index)}>
-                      <Cross1Icon />
-                    </IconButton>
-                  }
-                />
-              )}
-            />
-          </li>
-        ))}
+      <Flex direction={'column'} gap={'4'} align={'center'}>
+        <ul className={styles.list}>
+          {columnStatuses.map((status, index) => (
+            <li key={status.id}>
+              <Controller
+                name={`statuses.${index}.name`}
+                control={control}
+                rules={{ required: true }}
+                render={({ field, fieldState }) => (
+                  <Input
+                    label={index == 0 ? 'Board Columns *' : ''}
+                    name={'value'}
+                    field={field}
+                    fieldState={fieldState}
+                    placeholder={'Add Status (e.g., In Progress, QA, Done)'}
+                    prefix={
+                      <Controller
+                        name={`statuses.${index}.bg`}
+                        control={control}
+                        render={({ field, fieldState }) => (
+                          <ColorPickerDrop field={field} />
+                        )}
+                      />
+                    }
+                    postfix={
+                      <IconButton variant="ghost" onClick={() => remove(index)}>
+                        <Cross1Icon />
+                      </IconButton>
+                    }
+                  />
+                )}
+              />
+            </li>
+          ))}
+        </ul>
+
         <Button
+          variant="ghost"
           size={'3'}
-          type={'button'}
           onClick={handleAddColumn}
           className={cn(styles.btn_wide, styles.btn_secondary)}
+          style={{ width: 'calc(100% - 24px)' }}
         >
           + Add New Column
         </Button>
-      </ul>
+      </Flex>
 
       <Button
         size={'3'}

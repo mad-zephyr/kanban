@@ -2,15 +2,15 @@ import { FC, useState } from 'react'
 import type { SubmitHandler } from 'react-hook-form'
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form'
 import { v4 as uuidv4 } from 'uuid'
-import { Button, IconButton } from '@radix-ui/themes'
+import { Button, Flex, IconButton } from '@radix-ui/themes'
 import cn from 'classnames'
-import { Cross1Icon, DotsVerticalIcon } from '@radix-ui/react-icons'
+import { Cross1Icon, Cross2Icon, DotsVerticalIcon } from '@radix-ui/react-icons'
 import { Item } from '@radix-ui/react-dropdown-menu'
 
 import { DropDown, Input, Select, Textarea } from '@/components/ui'
 import { useAppContext } from '@/context/app.context'
 import type { Task } from '@/context/todo.context'
-import { CombinedTaskFormSchemaType } from '@/modules/board/components/board-task/components/combined-form/board-task-combineed-form'
+import { CombinedTaskFormSchemaType } from '@/modules/board/components/board-task/components/combined-form/board-task-combined-form'
 
 import styles from './style.module.sass'
 
@@ -27,7 +27,7 @@ export const FormTaskEdit: FC<TFormTaskEdit> = ({ onClose, onEdit, task }) => {
   const [dropDownContainer, setDropDownContainer] =
     useState<HTMLElement | null>(null)
   const currentBoard = useAppContext((state) =>
-    state.boards.find((board) => board.id === state.activeBoardID)
+    state.boards.find((board) => board.id === state.activeBoardId)
   )
 
   const handleEditForm = (isEdit: boolean) => {
@@ -59,13 +59,16 @@ export const FormTaskEdit: FC<TFormTaskEdit> = ({ onClose, onEdit, task }) => {
       subTasks: currentTask?.subTasks || [],
       description: currentTask?.description || '',
     })
-    setEditedTask(currentTask)
+    setEditedTask({
+      ...currentTask,
+      description: currentTask?.description || '',
+    })
 
     handleEditForm(false)
   }
 
   const handleDeleteTask = () => {
-    deleteTask(task.id)
+    deleteTask(task)
     onClose()
   }
 
@@ -81,27 +84,44 @@ export const FormTaskEdit: FC<TFormTaskEdit> = ({ onClose, onEdit, task }) => {
           control={control}
           rules={{ required: true }}
           render={({ field, fieldState }) => (
-            <Input label="Title *" field={field} fieldState={fieldState} />
+            <Input
+              placeholder={'e.g., Design logo, Schedule meeting'}
+              label="Title *"
+              field={field}
+              fieldState={fieldState}
+            />
           )}
         />
-        <DropDown
-          className={styles.dropdown}
-          container={dropDownContainer}
-          triger={
-            <IconButton variant="ghost">
-              <DotsVerticalIcon />
-            </IconButton>
-          }
-          drowDownProps={{ sideOffset: 12 }}
-          content={
-            <Item
-              onClick={handleDeleteTask}
-              className={cn('DropdownMenuItem', styles.itemDelete)}
-            >
-              Delete Task
-            </Item>
-          }
-        />
+
+        <div className={styles.compact}>
+          <DropDown
+            className={styles.dropdown}
+            container={dropDownContainer}
+            triger={
+              <IconButton variant="ghost">
+                <DotsVerticalIcon />
+              </IconButton>
+            }
+            drowDownProps={{ sideOffset: 12 }}
+            content={
+              <Item
+                onClick={handleDeleteTask}
+                className={cn('DropdownMenuItem', styles.itemDelete)}
+              >
+                Delete Task
+              </Item>
+            }
+          />
+          <IconButton
+            size={'2'}
+            variant="ghost"
+            aria-label="Close"
+            className={styles.close}
+            onClick={onClose}
+          >
+            <Cross2Icon />
+          </IconButton>
+        </div>
       </div>
 
       <Controller
@@ -113,45 +133,50 @@ export const FormTaskEdit: FC<TFormTaskEdit> = ({ onClose, onEdit, task }) => {
             label="Description"
             field={field}
             fieldState={fieldState}
-            placeholder={'Reply to comment…'}
+            placeholder={'e.g., write report draft, schedule client call'}
           />
         )}
       />
 
-      {!!subtasksFields.length && (
-        <ul className={styles.list}>
-          {subtasksFields.map((tasks, index) => (
-            <li key={tasks.id}>
-              <Controller
-                name={`subTasks.${index}.name`}
-                control={control}
-                rules={{ required: true }}
-                render={({ field, fieldState }) => (
-                  <Input
-                    label={index == 0 ? 'Subtasks' : ''}
-                    field={field}
-                    fieldState={fieldState}
-                    postfix={
-                      <IconButton variant="ghost" onClick={() => remove(index)}>
-                        <Cross1Icon />
-                      </IconButton>
-                    }
-                  />
-                )}
-              />
-            </li>
-          ))}
-        </ul>
-      )}
-      <div className={styles.row}>
+      <Flex direction={'column'} gap={'4'} align={'center'}>
+        {!!subtasksFields.length && (
+          <ul className={styles.list}>
+            {subtasksFields.map((tasks, index) => (
+              <li key={tasks.id}>
+                <Controller
+                  name={`subTasks.${index}.name`}
+                  control={control}
+                  rules={{ required: true }}
+                  render={({ field, fieldState }) => (
+                    <Input
+                      label={index == 0 ? 'Subtasks' : ''}
+                      field={field}
+                      fieldState={fieldState}
+                      postfix={
+                        <IconButton
+                          variant="ghost"
+                          onClick={() => remove(index)}
+                        >
+                          <Cross1Icon />
+                        </IconButton>
+                      }
+                    />
+                  )}
+                />
+              </li>
+            ))}
+          </ul>
+        )}
         <Button
+          variant="ghost"
           size={'3'}
           onClick={handleAddSubtask}
           className={cn(styles.btn_wide, styles.btn_secondary)}
+          style={{ width: 'calc(100% - 24px)' }}
         >
           + Add New Subtask
         </Button>
-      </div>
+      </Flex>
       <div className={styles.row}>
         <Controller
           name="statusID"

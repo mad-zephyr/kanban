@@ -12,6 +12,7 @@ type TModalBoardCreate = {
   isOpen: boolean
   onOpenChange: () => void
   children: ReactElement
+  showCloseBtn?: boolean
 }
 
 const Modal: FC<TModalBoardCreate> = ({
@@ -19,18 +20,19 @@ const Modal: FC<TModalBoardCreate> = ({
   onOpenChange,
   title,
   children,
+  showCloseBtn = false,
 }) => {
   return (
     <Dialog.Root open={isOpen} onOpenChange={onOpenChange}>
       <Dialog.Portal>
-        <>
-          <ThemeProvider>
-            <Dialog.Content className={styles.modal}>
-              {!!title && (
-                <Dialog.Title className={styles.title}>{title}</Dialog.Title>
-              )}
-              {children}
+        <ThemeProvider>
+          <Dialog.Content className={styles.modal}>
+            {!!title && (
+              <Dialog.Title className={styles.title}>{title}</Dialog.Title>
+            )}
+            {children}
 
+            {showCloseBtn && (
               <Dialog.Close asChild>
                 <IconButton
                   size={'2'}
@@ -41,10 +43,10 @@ const Modal: FC<TModalBoardCreate> = ({
                   <Cross2Icon />
                 </IconButton>
               </Dialog.Close>
-            </Dialog.Content>
-            <Dialog.Overlay className={styles.overlay} />
-          </ThemeProvider>
-        </>
+            )}
+          </Dialog.Content>
+          <Dialog.Overlay className={styles.overlay} />
+        </ThemeProvider>
       </Dialog.Portal>
     </Dialog.Root>
   )

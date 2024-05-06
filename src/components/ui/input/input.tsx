@@ -1,13 +1,12 @@
 import cn from 'classnames'
-import { Component, forwardRef } from 'react'
-import { CrossCircledIcon } from '@radix-ui/react-icons'
+import { forwardRef } from 'react'
 
 import styles from './style.module.sass'
 import { TInput } from './inpit.props'
-import { Tooltip } from '../tooltip/tooltip'
 
 export const Input = forwardRef<HTMLInputElement, TInput>((props, ref) => {
-  const { label, style, fieldState, field, postfix, prefix } = props
+  const { label, style, fieldState, field, postfix, prefix, placeholder } =
+    props
   const { name, value } = field
 
   const hasError = !!fieldState?.error && !!fieldState?.isTouched
@@ -23,21 +22,26 @@ export const Input = forwardRef<HTMLInputElement, TInput>((props, ref) => {
         {prefix && <span className={styles.prefix}>{prefix}</span>}
         <span
           className={cn(styles.input_container, {
-            [styles.with_prefix]: !!prefix,
-            [styles.with_postfix]: !!postfix,
-            [styles.with_prefix_postfix]: !!prefix && !!postfix,
+            [styles.with_prefix]: Boolean(prefix),
+            [styles.with_postfix]: Boolean(postfix),
+            [styles.with_prefix_postfix]: Boolean(prefix) && Boolean(postfix),
           })}
         >
-          <input id={name} {...field} value={value} />
-          {hasError && (
-            <Tooltip decsription={fieldState?.error?.message} side="left">
-              <div className={styles.error_container}>
-                <CrossCircledIcon className={styles.error_icon} />
+          <span className={styles.input_content}>
+            <input
+              id={name}
+              {...field}
+              value={value}
+              placeholder={placeholder}
+            />
+            {hasError && (
+              <div className={styles.error_label}>
+                {fieldState?.error?.message}
               </div>
-            </Tooltip>
-          )}
+            )}
+          </span>
         </span>
-        <span className={styles.postfix}>{postfix}</span>
+        {postfix && <span className={styles.postfix}>{postfix}</span>}
       </span>
     </fieldset>
   )
