@@ -8,7 +8,7 @@ import { Item } from '@radix-ui/react-dropdown-menu'
 import { Checkbox, DropDown, Label, Select } from '@/components/ui'
 import { useAppContext } from '@/context/app.context'
 import type { SubTask, Task } from '@/context/todo.context'
-import { CombinedTaskFormSchemaType } from '@/modules/board/components/board-task/components/combined-form/board-task-combined-form'
+import { CombinedTaskFormSchemaType } from '@/modules/board/components/board-task/components'
 
 import styles from './style.module.sass'
 
@@ -44,11 +44,14 @@ export const FormTaskShow: FC<TFormTaskEdit> = ({ onClose, onEdit, task }) => {
 
   useEffect(() => {
     const { unsubscribe } = watch((updTask) => {
-      updateTask({
-        ...task,
-        statusID: updTask.statusID || '',
-        subTasks: updTask.subTasks as unknown as SubTask[],
-      })
+      updateTask(
+        {
+          ...task,
+          statusID: updTask.statusID || '',
+          subTasks: updTask.subTasks as unknown as SubTask[],
+        },
+        task.statusID
+      )
     })
 
     return () => unsubscribe()

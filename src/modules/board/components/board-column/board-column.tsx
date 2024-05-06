@@ -1,4 +1,4 @@
-import { FC, ReactNode, useRef } from 'react'
+import { FC, useRef } from 'react'
 import cn from 'classnames'
 import { Droppable, DroppableStateSnapshot } from 'react-beautiful-dnd'
 
@@ -35,7 +35,6 @@ export const BoardColumn: FC<TBoardColumn> = ({ tasks = [], column }) => {
               [styles.column_empty]: !tasks.length,
             })}
             {...provided.droppableProps}
-            {...dropState}
             data-using-placeholder={dropState.isUsingPlaceholder}
             ref={provided.innerRef}
           >

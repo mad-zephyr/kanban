@@ -3,8 +3,11 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 
+import { UiBoardModel } from '@/common/models/board-model/ui-board-model'
+import { serverMock } from '@/mock_data'
+
 import { SystemContext, systemContext } from './system.context'
-import { TodoContext, todoContext } from './todo.context'
+import { todoContext, TodoContext } from './todo.context'
 
 type AppContext = SystemContext & TodoContext
 
@@ -16,6 +19,19 @@ export const useAppContext = create<AppContext>()(
       ...systemContext(set, get),
       ...todoContext(set, get),
     }),
-    { name: $STORAGE_NAME }
+    {
+      name: $STORAGE_NAME,
+      version: 2,
+      migrate: (persistedState, version) => {
+        if (version === 0) {
+          const state = persistedState as AppContext
+          const { boards, tasks } = UiBoardModel(serverMock)
+
+          return { ...state, boards, tasks, activeBoardId: boards[0].id }
+        }
+
+        return persistedState
+      },
+    }
   )
 )

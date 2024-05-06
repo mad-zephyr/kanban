@@ -44,62 +44,6 @@ export const Board: FC = () => {
     setShowTaskModal(!!editedTask)
   }, [editedTask])
 
-  // const onDragEnd = (result: DropResult, provided: ResponderProvided) => {
-  //   if (result.combine) {
-  //     if (result.type === 'COLUMN') {
-  //       const shallow = [...ordered]
-  //       shallow.splice(result.source.index, 1)
-  //       setOrdered(shallow)
-  //       return
-  //     }
-
-  //     const column = columns[result.source.droppableId]
-  //     const withQuoteRemoved = [...column]
-
-  //     withQuoteRemoved.splice(result.source.index, 1)
-
-  //     const orderedColumns = {
-  //       ...columns,
-  //       [result.source.droppableId]: withQuoteRemoved,
-  //     }
-  //     setColumns(orderedColumns)
-  //     return
-  //   }
-
-  //   // dropped nowhere
-  //   if (!result.destination) {
-  //     return
-  //   }
-
-  //   const source = result.source
-  //   const destination = result.destination
-
-  //   // did not move anywhere - can bail early
-  //   if (
-  //     source.droppableId === destination.droppableId &&
-  //     source.index === destination.index
-  //   ) {
-  //     return
-  //   }
-
-  //   // reordering column
-  //   if (result.type === 'COLUMN') {
-  //     const reorderedorder = reorder(ordered, source.index, destination.index)
-
-  //     setOrdered(reorderedorder)
-
-  //     return
-  //   }
-
-  //   const data = reorderQuoteMap({
-  //     quoteMap: columns,
-  //     source,
-  //     destination,
-  //   })
-
-  //   setColumns(data.quoteMap)
-  // }
-
   const onDragEnd = (result: DropResult, provided: ResponderProvided) => {
     const { destination, draggableId, type, source } = result
 

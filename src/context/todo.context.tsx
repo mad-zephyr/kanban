@@ -41,7 +41,7 @@ export type TodoSliceAction = {
   removeBoard: (boardId: string) => void
 
   createTask: (task: Task) => void
-  updateTask: (task: Task) => void
+  updateTask: (task: Task, previousStatusId: string) => void
   deleteTask: (task: Task) => void
 
   updateTasks: (tasks: Tasks) => void
@@ -100,24 +100,33 @@ export const todoContext = (
       }
     }),
 
-  updateTask: (updatedTask: Task) =>
+  updateTask: (updatedTask: Task, previousStatusId: string) =>
     set((state) => {
-      const currentTasks = state.tasks[updatedTask.statusID]
+      const sourceTasks = state.tasks[previousStatusId]
+      const destinationTasks = state.tasks[updatedTask.statusID]?.length
+        ? state.tasks[updatedTask.statusID]
+        : []
 
-      const taskIndexToUpdate = currentTasks.findIndex(
+      const sourceTaskIndex = sourceTasks.findIndex(
         (task) => task.id === updatedTask.id
       )
 
-      const updatedTasks = currentTasks.toSpliced(
-        taskIndexToUpdate,
-        1,
-        updatedTask
+      sourceTasks.splice(sourceTaskIndex, 1)
+
+      const taskIndexToUpdate = destinationTasks.findIndex(
+        (task) => task.id === updatedTask.id
       )
+
+      const updatedTasks =
+        taskIndexToUpdate < 0
+          ? [...destinationTasks, updatedTask]
+          : destinationTasks.toSpliced(taskIndexToUpdate, 1, updatedTask)
 
       return {
         tasks: {
           ...state.tasks,
           [updatedTask.statusID]: updatedTasks,
+          [previousStatusId]: sourceTasks,
         },
       }
     }),
@@ -144,30 +153,3 @@ export const todoContext = (
 
   setEditedTask: (task?: Task) => set((state) => ({ editedTask: task })),
 })
-
-function getElementAndIndex<T extends { id: string }>(
-  elemArray: Array<T>,
-  id: string
-): [T | undefined, number] {
-  const elem = elemArray.find((elem) => elem.id === id)
-  const elemIndex = elemArray.findIndex((elem) => elem.id === id)
-
-  return [elem, elemIndex]
-}
-
-function updateArray<T>(elemArray: T[], elem: T, index: number) {
-  return elemArray.toSpliced(index, 1, elem)
-}
-
-function groupTasksByStatusId(statuses: BoardStatus[], allTasks: Task[]) {
-  return statuses.reduce<Record<BoardStatus['id'], Task[]>>((all, status) => {
-    const taskLinkedWithStatus = allTasks.filter(
-      (task) => task.statusID === status.id
-    )
-
-    return {
-      ...all,
-      [status.id]: taskLinkedWithStatus,
-    }
-  }, {})
-}
