@@ -104,7 +104,9 @@ export const FormTaskShow: FC<TFormTaskEdit> = ({ onClose, onEdit, task }) => {
             </IconButton>
           </div>
         </div>
-        <Text className={styles.description}>{task.description}</Text>
+        {task.description && (
+          <Text className={styles.description}>{task.description}</Text>
+        )}
       </div>
       {!!subtasksFields.length && (
         <ul className={styles.list}>
