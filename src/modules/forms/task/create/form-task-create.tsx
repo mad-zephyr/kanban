@@ -28,7 +28,10 @@ const CreateTaskFormSchema = z.object({
     .array(
       z.object({
         id: z.string(),
-        name: z.string().trim().min(4, { message: 'Reqired' }),
+        name: z
+          .string()
+          .trim()
+          .min(3, { message: 'The name must consist of at least 3 letters' }),
         done: z.boolean(),
       })
     )
