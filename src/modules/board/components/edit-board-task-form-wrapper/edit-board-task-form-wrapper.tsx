@@ -66,7 +66,7 @@ export const EditTaskFormWrapper: FC<TEditTaskFormWrapper> = ({
   }
 
   const handleDeleteTask = () => {
-    deleteTask(task.id)
+    deleteTask(task)
   }
 
   const showTaskEditForm = openedTask && editTaskMode
