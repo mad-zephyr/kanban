@@ -37,10 +37,11 @@ export const useAppContext = create<AppContext>()(
         const { boards, tasks } = UiBoardModel(serverMock)
 
         if (!state) {
+          console.log('STATE INITIALIZED')
           return { ...currentState, boards, tasks, activeBoardId: boards[0].id }
+        } else {
+          return { ...currentState, ...state }
         }
-
-        return { ...currentState, ...state }
       },
     }
   )
