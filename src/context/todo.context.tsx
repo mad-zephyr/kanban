@@ -103,23 +103,18 @@ export const todoContext = (
 
   updateTask: (updatedTask: Task) =>
     set((state) => {
-      const destinationTasks = state.tasks[updatedTask.statusID]?.length
-        ? state.tasks[updatedTask.statusID]
-        : []
+      const destinationTasks = state.tasks[updatedTask.statusID]
 
-      const taskIndexToUpdate = destinationTasks.findIndex(
+      const destinationTaskIndex = destinationTasks.findIndex(
         (task) => task.id === updatedTask.id
       )
 
-      const updatedTasks =
-        taskIndexToUpdate < 0
-          ? [...destinationTasks, updatedTask]
-          : destinationTasks.toSpliced(taskIndexToUpdate, 1, updatedTask)
+      destinationTasks.splice(destinationTaskIndex, 1, updatedTask)
 
       return {
         tasks: {
           ...state.tasks,
-          [updatedTask.statusID]: updatedTasks,
+          [updatedTask.statusID]: destinationTasks,
         },
       }
     }),

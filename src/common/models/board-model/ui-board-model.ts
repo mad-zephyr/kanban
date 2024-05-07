@@ -51,7 +51,7 @@ const getTasks = (serverTasks: ServerTask[], statusId: string): Task[] => {
   }))
 }
 
-const getColumns = (
+const getStatuseAndTasks = (
   columns: ServerStatus[]
 ): [BoardStatus[], Record<BoardStatus['id'], Task[]>] => {
   const statuses: BoardStatus[] = []
@@ -77,7 +77,7 @@ export const UiBoardModel = (mockServerData: ServerBoard[]): UiType => {
   for (const serverBoard of mockServerData) {
     const boardId = uuid4()
 
-    const [statuses, tasks] = getColumns(serverBoard.columns)
+    const [statuses, tasks] = getStatuseAndTasks(serverBoard.columns)
 
     const curentBoard: Board = {
       id: boardId,

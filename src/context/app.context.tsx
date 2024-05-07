@@ -1,7 +1,7 @@
 'use client'
 
 import { create } from 'zustand'
-import { persist } from 'zustand/middleware'
+import { createJSONStorage, persist } from 'zustand/middleware'
 
 import { UiBoardModel } from '@/common/models/board-model/ui-board-model'
 import { serverMock } from '@/mock_data'
@@ -31,6 +31,16 @@ export const useAppContext = create<AppContext>()(
         }
 
         return persistedState
+      },
+      merge(persistedState, currentState) {
+        const state = persistedState as AppContext
+        const { boards, tasks } = UiBoardModel(serverMock)
+
+        if (!state?.boards) {
+          return { ...currentState, boards, tasks, activeBoardId: boards[0].id }
+        }
+
+        return state
       },
     }
   )

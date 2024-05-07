@@ -67,8 +67,17 @@ export const Board: FC = () => {
 
       if (!dragableTask) return
 
+      const dragableTaskWIthUpdatedParentStatusId = {
+        ...dragableTask,
+        statusID: destination?.droppableId,
+      }
+
       updatedSourceTasks.splice(source.index, 1)
-      updatedDestinationTasks.splice(destination.index, 0, dragableTask)
+      updatedDestinationTasks.splice(
+        destination.index,
+        0,
+        dragableTaskWIthUpdatedParentStatusId
+      )
 
       updateTasks({
         ...allTasks,

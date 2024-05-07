@@ -59,7 +59,7 @@ export const FormTaskShow: FC<TFormTaskEdit> = ({ onClose, onEdit, task }) => {
     })
 
     return () => unsubscribe()
-  }, [reorderTask, task, updateTask, watch])
+  }, [onClose, reorderTask, task, updateTask, watch])
 
   return (
     <form className={styles.form} ref={setDropDownContainer}>
