@@ -40,7 +40,7 @@ export const useAppContext = create<AppContext>()(
           return { ...currentState, boards, tasks, activeBoardId: boards[0].id }
         }
 
-        return state
+        return { ...currentState, ...state }
       },
     }
   )
