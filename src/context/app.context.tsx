@@ -36,7 +36,7 @@ export const useAppContext = create<AppContext>()(
         const state = persistedState as AppContext
         const { boards, tasks } = UiBoardModel(serverMock)
 
-        if (!state?.boards) {
+        if (!state) {
           return { ...currentState, boards, tasks, activeBoardId: boards[0].id }
         }
 
