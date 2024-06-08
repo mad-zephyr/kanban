@@ -10,11 +10,11 @@ export const createStatuses = async (
   try {
     for (const status of statuses) {
       await db.status.upsert({
-        create: status,
-        update: status,
         where: {
           id: status.id,
         },
+        update: status,
+        create: status,
       })
     }
 

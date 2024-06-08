@@ -5,7 +5,7 @@ import { ServerBoard } from '@/common/models/board-model/ui-board-model'
 import { serverMock } from '@/mock_data'
 import { auth } from '@/auth'
 
-export type StatusModel = Pick<Status, 'id' | 'bg' | 'name'>
+export type StatusModel = Pick<Status, 'id' | 'bg' | 'name' | 'boardId'>
 
 export type BoardModel = Pick<Board, 'id' | 'name' | 'ownerId'> & {
   statuses: StatusModel[]
@@ -121,7 +121,7 @@ export const updateBoard = async (board: BoardModel) => {
 
     const { statusesToDelete, statusesCreateOrUpdate } = groupedStatuses
 
-    await Promise.allSettled(
+    await Promise.all(
       statusesCreateOrUpdate.map((status) =>
         db.status.upsert({
           where: {
@@ -129,12 +129,16 @@ export const updateBoard = async (board: BoardModel) => {
           },
           update: { bg: status.bg, name: status.name },
           create: {
-            ...status,
-            board: { connect: { id: board.id } },
+            bg: status.bg,
+            name: status.name,
+            board: {
+              connect: { id: board.id },
+            },
           },
         })
       )
     )
+    // board: { connect: { id: board.id } },
 
     if (statusesToDelete.length) {
       for (const status of statusesToDelete) {
