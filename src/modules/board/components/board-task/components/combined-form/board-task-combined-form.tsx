@@ -3,16 +3,16 @@ import { FormProvider, useForm } from 'react-hook-form'
 import { z } from 'zod'
 
 import { FormTaskEdit, FormTaskShow } from '@/modules/forms'
-import { useAppContext } from '@/context/app.context'
+import { useAppContext } from '@/common/context/app.context'
 
 const CombinedTaskFormSchema = z.object({
-  id: z.string(),
+  id: z.string().uuid(),
   name: z
     .string()
     .trim()
     .min(4, { message: 'The name must consist of at least 4 letters' }),
   description: z.string().trim().optional(),
-  statusID: z.string(),
+  statusId: z.string(),
   subTasks: z.array(
     z.object({
       id: z.string(),

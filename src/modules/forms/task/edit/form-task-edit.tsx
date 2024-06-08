@@ -8,8 +8,8 @@ import { Cross1Icon, Cross2Icon, DotsVerticalIcon } from '@radix-ui/react-icons'
 import { Item } from '@radix-ui/react-dropdown-menu'
 
 import { DropDown, Input, Select, Textarea } from '@/components/ui'
-import { useAppContext } from '@/context/app.context'
-import type { Task } from '@/context/todo.context'
+import { useAppContext } from '@/common/context/app.context'
+import type { Task } from '@/common/context/todo.context'
 import { CombinedTaskFormSchemaType } from '@/modules/board/components/board-task/components/combined-form/board-task-combined-form'
 
 import styles from './style.module.sass'
@@ -55,14 +55,14 @@ export const FormTaskEdit: FC<TFormTaskEdit> = ({ onClose, onEdit, task }) => {
   const onSubmit: SubmitHandler<CombinedTaskFormSchemaType> = (currentTask) => {
     const updTask = {
       id: currentTask.id,
-      statusID: currentTask.statusID,
+      statusId: currentTask.statusId,
       name: currentTask.name,
       subTasks: currentTask?.subTasks || [],
       description: currentTask?.description || '',
     }
 
-    if (task.statusID !== currentTask.statusID) {
-      reorderTask(updTask, task.statusID)
+    if (task.statusId !== currentTask.statusId) {
+      reorderTask(updTask, task.statusId)
       onClose()
     } else {
       updateTask(updTask)
@@ -188,7 +188,7 @@ export const FormTaskEdit: FC<TFormTaskEdit> = ({ onClose, onEdit, task }) => {
       </Flex>
       <div className={styles.row}>
         <Controller
-          name="statusID"
+          name="statusId"
           control={control}
           rules={{ required: true }}
           render={({ field, fieldState }) => (

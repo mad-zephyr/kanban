@@ -10,7 +10,7 @@ export type Task = {
   id: string
   name: string
   description: string
-  statusID: string
+  statusId: string
   subTasks: SubTask[]
 }
 
@@ -26,7 +26,7 @@ export type Board = {
   statuses: BoardStatus[]
 }
 
-type Tasks = Record<BoardStatus['id'], Task[]>
+export type Tasks = Record<BoardStatus['id'], Task[]>
 
 export type TodoSliceContext = {
   boards: Board[]
@@ -38,11 +38,12 @@ export type TodoSliceContext = {
 export type TodoSliceAction = {
   addBoard: (board: Board) => void
   updateBoard: (board: Board) => void
+  updateBoards: (boards: Board[]) => void
   removeBoard: (boardId: string) => void
 
   createTask: (task: Task) => void
   updateTask: (task: Task) => void
-  reorderTask: (task: Task, previousStatusId: string) => void
+  reorderTask: (updatedTask: Task, previousStatusId: string) => void
   deleteTask: (task: Task) => void
 
   updateTasks: (tasks: Tasks) => void
@@ -75,6 +76,8 @@ export const todoContext = (
       return { boards: state.boards.toSpliced(boardIndexToReplace, 1, board) }
     }),
 
+  updateBoards: (boards: Board[]) => set((state) => ({ boards })),
+
   setActiveBoard: (boardID: string) =>
     set((state) => {
       return {
@@ -90,20 +93,20 @@ export const todoContext = (
 
   createTask: (task: Task) =>
     set((state) => {
-      const currentTasks = state.tasks[task.statusID]
+      const currentTasks = state.tasks[task.statusId]
       const updTasks = currentTasks?.length ? [...currentTasks, task] : [task]
 
       return {
         tasks: {
           ...state.tasks,
-          [task.statusID]: updTasks,
+          [task.statusId]: updTasks,
         },
       }
     }),
 
   updateTask: (updatedTask: Task) =>
     set((state) => {
-      const destinationTasks = state.tasks[updatedTask.statusID]
+      const destinationTasks = state.tasks[updatedTask.statusId]
 
       const destinationTaskIndex = destinationTasks.findIndex(
         (task) => task.id === updatedTask.id
@@ -114,14 +117,14 @@ export const todoContext = (
       return {
         tasks: {
           ...state.tasks,
-          [updatedTask.statusID]: destinationTasks,
+          [updatedTask.statusId]: destinationTasks,
         },
       }
     }),
 
   reorderTask: (updatedTask: Task, previousStatusId: string) =>
     set((state) => {
-      const destinationTasks = state.tasks[updatedTask.statusID]
+      const destinationTasks = state.tasks[updatedTask.statusId]
       const sourceTasks = state.tasks[previousStatusId]
 
       const sourceTaskIndex = sourceTasks.findIndex(
@@ -135,18 +138,30 @@ export const todoContext = (
       return {
         tasks: {
           ...state.tasks,
-          [updatedTask.statusID]: destinationTasks,
+          [updatedTask.statusId]: destinationTasks,
           [previousStatusId]: sourceTasks,
         },
       }
     }),
+  // reorderTask: (reorderedTasks: ReorderedTasks) =>
+  //   set((state) => {
+  //     const { destinationTasks, sourceTasks } = reorderedTasks
+
+  //     return {
+  //       tasks: {
+  //         ...state.tasks,
+  //         [destinationTasks[0].destinationStatusId]: destinationTasks[1],
+  //         [sourceTasks[0].sourceStatusId]: sourceTasks[1],
+  //       },
+  //     }
+  //   }),
 
   updateTasks: (updatedTasks: Tasks) =>
     set((state) => ({ tasks: updatedTasks })),
 
   deleteTask: (taskToDelete: Task) =>
     set((state) => {
-      const currentTasks = state.tasks[taskToDelete.statusID]
+      const currentTasks = state.tasks[taskToDelete.statusId]
       const taskIndexToDelete = currentTasks.findIndex(
         (task) => task.id === taskToDelete.id
       )
@@ -156,7 +171,7 @@ export const todoContext = (
       return {
         tasks: {
           ...state.tasks,
-          [taskToDelete.statusID]: updatedTasks,
+          [taskToDelete.statusId]: updatedTasks,
         },
       }
     }),

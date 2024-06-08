@@ -3,7 +3,7 @@ import { Text } from '@radix-ui/themes'
 import { Draggable } from 'react-beautiful-dnd'
 
 import { Progress } from '@/components/ui/index'
-import { useAppContext } from '@/context/app.context'
+import { useAppContext } from '@/common/context/app.context'
 
 import { TBoardTask } from './board-task.props'
 import styles from './styles.module.sass'

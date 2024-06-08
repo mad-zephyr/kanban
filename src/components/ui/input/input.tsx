@@ -3,13 +3,31 @@ import { forwardRef } from 'react'
 
 import styles from './style.module.sass'
 import { TInput } from './inpit.props'
+import { PassIconEye } from './components/input-showpass-icon'
 
 export const Input = forwardRef<HTMLInputElement, TInput>((props, ref) => {
-  const { label, style, fieldState, field, postfix, prefix, placeholder } =
-    props
+  const {
+    label,
+    style,
+    fieldState,
+    field,
+    postfix,
+    prefix,
+    placeholder,
+    showPass,
+    onShowPass,
+    ...rest
+  } = props
   const { name, value } = field
+  const { type } = rest
 
   const hasError = !!fieldState?.error && !!fieldState?.isTouched
+
+  const passIcon = showPass ? (
+    <PassIconEye onClick={onShowPass} className={styles.passIcon} type={type} />
+  ) : (
+    <></>
+  )
 
   return (
     <fieldset
@@ -33,7 +51,9 @@ export const Input = forwardRef<HTMLInputElement, TInput>((props, ref) => {
               {...field}
               value={value}
               placeholder={placeholder}
+              {...rest}
             />
+            {passIcon}
             {hasError && (
               <div className={styles.error_label}>
                 {fieldState?.error?.message}

@@ -2,7 +2,8 @@ import { Button, Text } from '@radix-ui/themes'
 import cn from 'classnames'
 import { FC } from 'react'
 
-import { useAppContext } from '@/context/app.context'
+import { useAppContext } from '@/common/context/app.context'
+import { useDeleteBoard } from '@/common/hooks/query/useBoardQuery'
 
 import styles from './styles.module.sass'
 
@@ -11,13 +12,18 @@ type TDeleteBoardForm = {
 }
 
 export const DeleteBoardForm: FC<TDeleteBoardForm> = ({ onClose }) => {
-  const removeBoard = useAppContext.getState().removeBoard
+  const deleteBoard = useDeleteBoard()
+  const { removeBoard } = useAppContext.getState()
+
   const activeBoard = useAppContext((state) =>
     state.boards.find((board) => board.id === state.activeBoardId)
   )
 
   const handleDelete = () => {
-    removeBoard(activeBoard?.id || '')
+    if (activeBoard) {
+      removeBoard(activeBoard?.id)
+      deleteBoard.mutate(activeBoard)
+    }
     onClose()
   }
 

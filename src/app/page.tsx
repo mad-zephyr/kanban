@@ -1,6 +1,8 @@
 import { Metadata } from 'next'
+import { dehydrate, QueryClient } from '@tanstack/react-query'
 
 import { BoardView } from '@/views'
+import { auth } from '@/auth'
 
 export const metadata: Metadata = {
   title: 'Kandan app',

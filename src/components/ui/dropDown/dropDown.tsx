@@ -4,15 +4,17 @@ import {
   Item,
   Portal,
   Root,
+  Separator,
   Trigger,
 } from '@radix-ui/react-dropdown-menu'
 import type { DropdownMenuContentProps } from '@radix-ui/react-dropdown-menu'
-import { forwardRef, ReactElement } from 'react'
+import { FC, forwardRef, ReactElement } from 'react'
+import cn from 'classnames'
 
 import './styles.sass'
 
 type TDropDown = {
-  className: string
+  className?: string
   triger?: ReactElement
   content?: ReactElement
   container?: HTMLElement | null
@@ -37,7 +39,7 @@ export const DropDown = forwardRef<HTMLDivElement, TDropDown>(
               collisionPadding={{ right: 40 }}
             >
               {content}
-              {withArrow && <Arrow />}
+              {withArrow && <Arrow className="DropdownMenuArrow" />}
             </Content>
           </Portal>
         </Root>
@@ -45,5 +47,22 @@ export const DropDown = forwardRef<HTMLDivElement, TDropDown>(
     )
   }
 )
+
+type TDropDownItem = {
+  onClick: () => void
+  text: string
+}
+
+export const DropDownItem: FC<TDropDownItem> = ({ onClick, text }) => {
+  return (
+    <Item onClick={onClick} className={cn('DropdownMenuItem')}>
+      {text}
+    </Item>
+  )
+}
+
+export const DropDownSeparator = () => {
+  return <Separator />
+}
 
 DropDown.displayName = 'DropDown'

@@ -1,0 +1,91 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  emailVerified DateTime?
+  image         String?
+  password      String?
+  role          UserRole  @default(USER)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  accounts      Account[]
+  boards        Board[]
+}
+
+model Account {
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([provider, providerAccountId])
+}
+
+model Board {
+  id        String   @id @default(uuid())
+  name      String?  @default("Board name")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ownerId   String
+  owner     User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  statuses  Status[]
+}
+
+model Status {
+  id            String   @id @default(uuid())
+  bg            String
+  name          String
+  boardId       String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  tasksOrderIds Json     @default("[]")
+
+  board         Board    @relation(fields: [boardId], references: [id], onDelete: Cascade)
+  tasks         Task[]
+}
+
+model Task {
+  id          String    @id @default(uuid())
+  name        String
+  statusId    String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  description String?   @default("")
+  subtasks    Subtask[]
+  status      Status    @relation(fields: [statusId], references: [id], onDelete: Cascade)
+}
+
+model Subtask {
+  id        String   @id @default(uuid())
+  name      String
+  done      Boolean
+  taskId    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  task      Task     @relation(fields: [taskId], references: [id], onDelete: Cascade)
+}
+
+enum UserRole {
+  USER
+  ADMIN
+}

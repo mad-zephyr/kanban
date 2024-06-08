@@ -6,9 +6,11 @@ import { Cross1Icon, Cross2Icon, DotsVerticalIcon } from '@radix-ui/react-icons'
 import { Item } from '@radix-ui/react-dropdown-menu'
 
 import { Checkbox, DropDown, Label, Select } from '@/components/ui'
-import { useAppContext } from '@/context/app.context'
-import type { SubTask, Task } from '@/context/todo.context'
+import { useAppContext } from '@/common/context/app.context'
+import type { Task } from '@/common/context/todo.context'
 import { CombinedTaskFormSchemaType } from '@/modules/board/components/board-task/components'
+import { useUpdateTask } from '@/common/hooks/query/useTaskQuery'
+import { populateSubTaskWithTaskId } from '@/common/helpers/task.helper'
 
 import styles from './style.module.sass'
 
@@ -19,6 +21,7 @@ type TFormTaskEdit = {
 }
 
 export const FormTaskShow: FC<TFormTaskEdit> = ({ onClose, onEdit, task }) => {
+  const updateDbTask = useUpdateTask()
   const methods = useFormContext<CombinedTaskFormSchemaType>()
 
   const [dropDownContainer, setDropDownContainer] =
@@ -46,20 +49,24 @@ export const FormTaskShow: FC<TFormTaskEdit> = ({ onClose, onEdit, task }) => {
     const { unsubscribe } = watch((updTask) => {
       const taskToUpdate = {
         ...task,
-        statusID: updTask.statusID || '',
-        subTasks: updTask.subTasks as SubTask[],
-      }
+        statusId: updTask.statusId,
+        subTasks: updTask.subTasks ? updTask.subTasks : [],
+      } as unknown as Task
 
-      if (task.statusID !== updTask.statusID) {
-        reorderTask(taskToUpdate, task.statusID)
+      const taskDbToUpdate = populateSubTaskWithTaskId(taskToUpdate)
+
+      if (task.statusId !== updTask.statusId) {
+        reorderTask(taskToUpdate, task.statusId)
+        updateDbTask.mutate({ action: 'reorder', payload: taskDbToUpdate })
         onClose()
       } else {
         updateTask(taskToUpdate)
+        updateDbTask.mutate({ action: 'update', payload: taskDbToUpdate })
       }
     })
 
     return () => unsubscribe()
-  }, [onClose, reorderTask, task, updateTask, watch])
+  }, [onClose, reorderTask, task, updateDbTask, updateTask, watch])
 
   return (
     <form className={styles.form} ref={setDropDownContainer}>
@@ -137,7 +144,7 @@ export const FormTaskShow: FC<TFormTaskEdit> = ({ onClose, onEdit, task }) => {
       )}
       <div className={styles.row}>
         <Controller
-          name="statusID"
+          name="statusId"
           control={control}
           rules={{ required: true }}
           render={({ field, fieldState }) => (

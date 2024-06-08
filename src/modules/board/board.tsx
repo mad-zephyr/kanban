@@ -1,6 +1,6 @@
 'use client'
 
-import { FC, useEffect, useMemo, useState } from 'react'
+import { FC, useEffect, useState } from 'react'
 import cn from 'classnames'
 import {
   DragDropContext,
@@ -8,15 +8,18 @@ import {
   ResponderProvided,
 } from 'react-beautiful-dnd'
 
-import { useAppContext } from '@/context/app.context'
-import type { BoardStatus, Task } from '@/context/todo.context'
+import { useAppContext } from '@/common/context/app.context'
+import type { BoardStatus, Task } from '@/common/context/todo.context'
 import Modal from '@/components/ui/modal/modal'
+import { useUpdateTask } from '@/common/hooks/query/useTaskQuery'
+import { populateSubTaskWithTaskId } from '@/common/helpers/task.helper'
 
 import styles from './styles.module.sass'
 import { BoardColumn, BoardColumnNew } from './components'
 import { BoardTaskCombinedForm } from './components/board-task/components/combined-form/board-task-combined-form'
 
 export const Board: FC = () => {
+  const updateDbTask = useUpdateTask()
   const [showTaskModal, setShowTaskModal] = useState(false)
 
   const isSidebarOpen = useAppContext((state) => state.sidebarOpen)
@@ -67,17 +70,28 @@ export const Board: FC = () => {
 
       if (!dragableTask) return
 
-      const dragableTaskWIthUpdatedParentStatusId = {
+      const dragableTaskWithUpdatedParentStatusId = {
         ...dragableTask,
-        statusID: destination?.droppableId,
+        statusId: destination?.droppableId,
       }
 
       updatedSourceTasks.splice(source.index, 1)
       updatedDestinationTasks.splice(
         destination.index,
         0,
-        dragableTaskWIthUpdatedParentStatusId
+        dragableTaskWithUpdatedParentStatusId
       )
+
+      console.log('DRAGG')
+
+      const taskDbToUpdate = populateSubTaskWithTaskId(
+        dragableTaskWithUpdatedParentStatusId
+      )
+
+      updateDbTask.mutate({
+        action: 'reorder',
+        payload: taskDbToUpdate,
+      })
 
       updateTasks({
         ...allTasks,
@@ -119,7 +133,7 @@ export const Board: FC = () => {
 function groupTasksForCurrentBoard(statuses: BoardStatus[], allTasks: Task[]) {
   return statuses.reduce<Record<string, Task[]>>((all, status) => {
     const taskLinkedWithStatus = allTasks.filter(
-      (task) => task.statusID === status.id
+      (task) => task.statusId === status.id
     )
 
     return {

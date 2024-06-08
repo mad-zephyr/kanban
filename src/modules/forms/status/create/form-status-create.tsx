@@ -13,7 +13,8 @@ import { v4 as uuidv4 } from 'uuid'
 import { Cross1Icon } from '@radix-ui/react-icons'
 
 import { ColorPickerDrop, Input } from '@/components/ui'
-import { useAppContext } from '@/context/app.context'
+import { useAppContext } from '@/common/context/app.context'
+import { useCreateSatus } from '@/common/hooks/query/useStatusQuery'
 
 import styles from './style.module.sass'
 
@@ -46,6 +47,8 @@ type TCreateBoardForm = {
 const CreateTaskStatusesForm: FC<TCreateBoardForm> = ({ onClose }) => {
   const [colorPickerContainer, setColorPickerContainer] =
     useState<HTMLElement | null>(null)
+
+  const createStatuses = useCreateSatus()
 
   const activeBoard = useAppContext((state) =>
     state.boards.find((board) => board.id === state.activeBoardId)
@@ -88,6 +91,15 @@ const CreateTaskStatusesForm: FC<TCreateBoardForm> = ({ onClose }) => {
       ...activeBoard,
       statuses: board.statuses,
     })
+
+    const statuses = board.statuses.map((status) => ({
+      ...status,
+      boardId: activeBoard.id,
+    }))
+
+    console.log('FRONT STATUSES: ', statuses)
+
+    createStatuses.mutate(statuses)
     onClose()
   }
 
@@ -140,7 +152,7 @@ const CreateTaskStatusesForm: FC<TCreateBoardForm> = ({ onClose }) => {
           variant="ghost"
           size={'3'}
           onClick={handleAddColumn}
-          className={cn(styles.btn_wide, styles.btn_secondary)}
+          className={styles.btn_wide}
           style={{ width: 'calc(100% - 24px)' }}
         >
           + Add New Column

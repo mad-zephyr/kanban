@@ -13,7 +13,8 @@ import { v4 as uuidv4 } from 'uuid'
 import { Cross1Icon } from '@radix-ui/react-icons'
 
 import { ColorPickerDrop, Input } from '@/components/ui'
-import { useAppContext } from '@/context/app.context'
+import { useAppContext } from '@/common/context/app.context'
+import { useUpdateBoard } from '@/common/hooks/query/useBoardQuery'
 
 import styles from './style.module.sass'
 
@@ -46,7 +47,10 @@ type TEditBoardForm = {
 export const EditBoardForm: FC<TEditBoardForm> = ({ onClose }) => {
   const [colorPickerContainer, setColorPickerContainer] =
     useState<HTMLElement | null>(null)
+
+  const updateBoardDb = useUpdateBoard()
   const { updateBoard } = useAppContext.getState()
+
   const activeBoard = useAppContext((state) =>
     state.boards.find((board) => board.id === state.activeBoardId)
   )
@@ -74,11 +78,15 @@ export const EditBoardForm: FC<TEditBoardForm> = ({ onClose }) => {
   }
 
   const onSubmit: SubmitHandler<EditBoardFormSchemaType> = (board) => {
-    updateBoard({
+    const updatedBoard = {
       id: board.id,
       name: board.name,
       statuses: board.statuses || [],
-    })
+    }
+
+    updateBoard(updatedBoard)
+
+    updateBoardDb.mutate(updatedBoard)
 
     onClose()
   }
@@ -145,7 +153,7 @@ export const EditBoardForm: FC<TEditBoardForm> = ({ onClose }) => {
           variant="ghost"
           onClick={handleAddColumn}
           style={{ width: 'calc(100% - 24px)' }}
-          className={cn(styles.btn_wide, styles.btn_secondary)}
+          className={styles.btn_wide}
         >
           + Add New Column
         </Button>

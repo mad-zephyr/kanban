@@ -3,7 +3,7 @@
 import { Theme } from '@radix-ui/themes'
 import { FC, ReactElement } from 'react'
 
-import { useAppContext } from '@/context/app.context'
+import { useAppContext } from '@/common/context/app.context'
 
 type TThemeProvider = {
   children: ReactElement | ReactElement[]

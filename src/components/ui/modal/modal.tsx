@@ -3,7 +3,7 @@ import { Cross2Icon } from '@radix-ui/react-icons'
 import { FC, ReactElement } from 'react'
 import { IconButton } from '@radix-ui/themes'
 
-import { ThemeProvider } from '@/providers/theme.provider'
+import { ThemeProvider } from '@/common/providers/theme.provider'
 
 import styles from './styles.module.sass'
 

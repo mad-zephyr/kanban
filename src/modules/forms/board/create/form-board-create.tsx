@@ -11,10 +11,13 @@ import { Button, Flex, IconButton } from '@radix-ui/themes'
 import cn from 'classnames'
 import { v4 as uuidv4 } from 'uuid'
 import { Cross1Icon } from '@radix-ui/react-icons'
+import { useQuery } from '@tanstack/react-query'
 
 import { ColorPickerDrop, Input } from '@/components/ui'
-import { useAppContext } from '@/context/app.context'
-import { BoardStatus } from '@/context/todo.context'
+import { useAppContext } from '@/common/context/app.context'
+import { BoardStatus } from '@/common/context/todo.context'
+import { useCurrentSession } from '@/common/hooks/useCurrentSession'
+import { useCreateBoard } from '@/common/hooks/query/useBoardQuery'
 
 import styles from './style.module.sass'
 
@@ -41,6 +44,8 @@ type TCreateBoardForm = {
 }
 
 const CreateBoardForm: FC<TCreateBoardForm> = ({ onClose }) => {
+  const createBoard = useCreateBoard()
+
   const [colorPickerContainer, setColorPickerContainer] =
     useState<HTMLElement | null>(null)
   const { addBoard } = useAppContext.getState()
@@ -73,7 +78,7 @@ const CreateBoardForm: FC<TCreateBoardForm> = ({ onClose }) => {
   }
 
   const onSubmit: SubmitHandler<CreateBoardFormSchemaType> = (board) => {
-    const boardStatus: BoardStatus[] = !board.statuses?.length
+    const boardStatuses: BoardStatus[] = !board.statuses?.length
       ? []
       : board.statuses.map((column) => ({
           id: uuidv4(),
@@ -81,11 +86,15 @@ const CreateBoardForm: FC<TCreateBoardForm> = ({ onClose }) => {
           bg: column.bg,
         }))
 
-    addBoard({
+    const newBoard = {
       id: uuidv4(),
       name: board.boardName,
-      statuses: boardStatus,
-    })
+      statuses: boardStatuses,
+    }
+
+    addBoard(newBoard)
+
+    createBoard.mutate(newBoard)
 
     onClose()
   }
@@ -153,7 +162,7 @@ const CreateBoardForm: FC<TCreateBoardForm> = ({ onClose }) => {
           size={'3'}
           onClick={handleAddColumn}
           style={{ width: 'calc(100% - 24px)' }}
-          className={`${(styles.btn, styles.btn_wide, styles.btn_secondary)}`}
+          className={`${(styles.btn, styles.btn_wide)}`}
         >
           + Add New Column
         </Button>

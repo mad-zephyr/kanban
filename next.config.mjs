@@ -8,6 +8,10 @@ const nextConfig = {
 
     return config
   },
+
+  images: {
+    domains: ['unsplash.com'], // Add any external domains you use for images
+  },
   reactStrictMode: false,
 }
 

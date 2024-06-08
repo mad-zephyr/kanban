@@ -4,16 +4,17 @@ import { Button, Flex, FlexProps, Heading, IconButton } from '@radix-ui/themes'
 import { FC, useState } from 'react'
 import cn from 'classnames'
 import { Item } from '@radix-ui/react-dropdown-menu'
+import { DotsVerticalIcon } from '@radix-ui/react-icons'
 
-import { DropDown, Toaster, useToast } from '@/components/ui'
-import { useAppContext } from '@/context/app.context'
+import { DropDown } from '@/components/ui'
+import { useAppContext } from '@/common/context/app.context'
 import LogoDark from '@/assets/logo-light.svg'
 import LogoLight from '@/assets/logo-dark.svg'
-import DotsVerticalIcon from '@/assets/icon-vertical-ellipsis.svg'
 import Modal from '@/components/ui/modal/modal'
 
 import styles from './styles.module.sass'
 import { DeleteBoardForm, EditBoardForm, FormTaskCreate } from '../forms'
+import { AuthModule } from '../auth/auth'
 
 const flexPropsStyle: FlexProps = {
   gap: '3',
@@ -37,7 +38,7 @@ export const Header: FC = () => {
   const [isShowAddTaskModal, setIsShowAddTaskModal] = useState(false)
 
   const currentBoard = useAppContext((state) =>
-    state.boards.find((board) => board.id === state.activeBoardId)
+    state.boards?.find((board) => board.id === state.activeBoardId)
   )
 
   const canAddTask = !!currentBoard?.statuses.length
@@ -81,7 +82,7 @@ export const Header: FC = () => {
               className={styles.dropdown}
               container={dropDownContainer}
               triger={
-                <IconButton variant="ghost">
+                <IconButton variant="ghost" size={'4'}>
                   <DotsVerticalIcon />
                 </IconButton>
               }
@@ -100,6 +101,7 @@ export const Header: FC = () => {
               }
             />
           )}
+          <AuthModule />
         </div>
         <Modal
           isOpen={isShowAddTaskModal}

@@ -1,4 +1,4 @@
-import { InputHTMLAttributes, ReactElement } from 'react'
+import { DetailedHTMLProps, InputHTMLAttributes, ReactElement } from 'react'
 import {
   ControllerFieldState,
   ControllerRenderProps,
@@ -6,12 +6,13 @@ import {
   FieldValues,
 } from 'react-hook-form'
 
-export type TInput = InputHTMLAttributes<HTMLInputElement> &
-  FieldValues &
-  FieldErrors & {
+export type TInput = FieldValues &
+  FieldErrors &
+  DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> & {
     label?: string
     fieldState: ControllerFieldState
     field: ControllerRenderProps
     postfix?: ReactElement
     prefix?: ReactElement
+    onShowPass?: () => void
   }

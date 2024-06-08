@@ -2,7 +2,7 @@ import * as ToolTip from '@radix-ui/react-tooltip'
 import { FC, HTMLAttributes, ReactElement } from 'react'
 
 import './styles.sass'
-import { ThemeProvider } from '@/providers/theme.provider'
+import { ThemeProvider } from '@/common/providers/theme.provider'
 
 type TToolTip = HTMLAttributes<HTMLElement> &
   ToolTip.TooltipContentProps & {

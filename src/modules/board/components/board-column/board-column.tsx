@@ -2,7 +2,7 @@ import { FC, useRef } from 'react'
 import cn from 'classnames'
 import { Droppable, DroppableStateSnapshot } from 'react-beautiful-dnd'
 
-import { BoardStatus, Task } from '@/context/todo.context'
+import { BoardStatus, Task } from '@/common/context/todo.context'
 
 import styles from './styles.module.sass'
 import { BoardTask } from '../board-task/board-task'

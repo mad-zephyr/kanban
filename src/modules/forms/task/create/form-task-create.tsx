@@ -13,7 +13,8 @@ import cn from 'classnames'
 import { Cross1Icon } from '@radix-ui/react-icons'
 
 import { Input, Select, Textarea } from '@/components/ui'
-import { useAppContext } from '@/context/app.context'
+import { useAppContext } from '@/common/context/app.context'
+import { useCreateTask } from '@/common/hooks/query/useTaskQuery'
 
 import styles from './style.module.sass'
 
@@ -23,7 +24,7 @@ const CreateTaskFormSchema = z.object({
     .trim()
     .min(4, { message: 'The name must consist of at least 4 letters' }),
   description: z.string().trim().optional(),
-  statusID: z.string(),
+  statusId: z.string(),
   subtasks: z
     .array(
       z.object({
@@ -54,6 +55,7 @@ const DEFAULT_VALUE = {
 }
 
 export const FormTaskCreate: FC<TFormTaskCreate> = ({ onClose }) => {
+  const addTask = useCreateTask()
   const currentBoard = useAppContext((state) =>
     state.boards.find((board) => board.id === state.activeBoardId)
   )
@@ -65,7 +67,7 @@ export const FormTaskCreate: FC<TFormTaskCreate> = ({ onClose }) => {
     disabled: false,
     defaultValues: {
       ...DEFAULT_VALUE,
-      statusID: currentBoard?.statuses[0]?.id,
+      statusId: currentBoard?.statuses[0]?.id,
     },
     resolver: zodResolver(CreateTaskFormSchema),
   })
@@ -85,12 +87,25 @@ export const FormTaskCreate: FC<TFormTaskCreate> = ({ onClose }) => {
     append({ name: '', done: false, id: uuidv4() }, { shouldFocus: false })
   }
   const onSubmit: SubmitHandler<CreateTaskFormSchemaType> = (task) => {
-    createTask({
+    const newTask = {
       id: uuidv4(),
-      statusID: task.statusID,
+      statusId: task.statusId,
       name: task.name,
       subTasks: task?.subtasks || [],
       description: task?.description || '',
+    }
+
+    createTask(newTask)
+
+    addTask.mutate({
+      id: newTask.id,
+      description: newTask.description,
+      name: newTask.name,
+      statusId: newTask.statusId,
+      subTasks: newTask.subTasks.map((subtask) => ({
+        ...subtask,
+        taskId: newTask.id,
+      })),
     })
     onClose()
   }
@@ -168,7 +183,7 @@ export const FormTaskCreate: FC<TFormTaskCreate> = ({ onClose }) => {
       </Flex>
       <div className={styles.row}>
         <Controller
-          name="statusID"
+          name="statusId"
           control={control}
           rules={{ required: true }}
           render={({ field, fieldState }) => (

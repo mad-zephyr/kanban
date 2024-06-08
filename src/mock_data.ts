@@ -1,70 +1,73 @@
 import { ServerBoard } from './common/models/board-model/ui-board-model'
 
+const ownerId = 'guest_user'
+
 const serverMock: ServerBoard[] = [
   {
     name: 'Platform Launch',
-    columns: [
+    ownerId,
+    statuses: [
       {
         name: 'Todo',
         tasks: [
           {
-            title: 'Build UI for onboarding flow',
+            name: 'Build UI for onboarding flow',
             description: '',
             status: 'Todo',
             subtasks: [
               {
-                title: 'Sign up page',
-                isCompleted: true,
+                name: 'Sign up page',
+                done: true,
               },
               {
-                title: 'Sign in page',
-                isCompleted: false,
+                name: 'Sign in page',
+                done: false,
               },
               {
-                title: 'Welcome page',
-                isCompleted: false,
+                name: 'Welcome page',
+                done: false,
               },
             ],
           },
           {
-            title: 'Build UI for search',
+            name: 'Build UI for search',
             description: '',
             status: 'Todo',
             subtasks: [
               {
-                title: 'Search page',
-                isCompleted: false,
+                name: 'Search page',
+                done: false,
               },
             ],
           },
           {
-            title: 'Build settings UI',
+            name: 'Build settings UI',
             description: '',
             status: 'Todo',
             subtasks: [
               {
-                title: 'Account page',
-                isCompleted: false,
+                name: 'Account page',
+                done: false,
               },
               {
-                title: 'Billing page',
-                isCompleted: false,
+                name: 'Billing page',
+                done: false,
               },
             ],
           },
           {
-            title: 'QA and test all major user journeys',
+            name: 'QA and test all major user journeys',
             description:
               'Once we feel version one is ready, we need to rigorously test it both internally and externally to identify any major gaps.',
             status: 'Todo',
             subtasks: [
               {
-                title: 'Internal testing',
-                isCompleted: false,
+                name: 'Internal testing',
+                done: false,
               },
               {
-                title: 'External testing',
-                isCompleted: false,
+                name: 'External testing',
+                done: false,
               },
             ],
           },
@@ -74,111 +77,109 @@ const serverMock: ServerBoard[] = [
         name: 'Doing',
         tasks: [
           {
-            title: 'Design settings and search pages',
+            name: 'Design settings and search pages',
             description: '',
             status: 'Doing',
             subtasks: [
               {
-                title: 'Settings - Account page',
-                isCompleted: true,
+                name: 'Settings - Account page',
+                done: true,
               },
               {
-                title: 'Settings - Billing page',
-                isCompleted: true,
+                name: 'Settings - Billing page',
+                done: true,
               },
               {
-                title: 'Search page',
-                isCompleted: false,
+                name: 'Search page',
+                done: false,
               },
             ],
           },
           {
-            title: 'Add account management endpoints',
+            name: 'Add account management endpoints',
             description: '',
             status: 'Doing',
             subtasks: [
               {
-                title: 'Upgrade plan',
-                isCompleted: true,
+                name: 'Upgrade plan',
+                done: true,
               },
               {
-                title: 'Cancel plan',
-                isCompleted: true,
+                name: 'Cancel plan',
+                done: true,
               },
               {
-                title: 'Update payment method',
-                isCompleted: false,
+                name: 'Update payment method',
+                done: false,
               },
             ],
           },
           {
-            title: 'Design onboarding flow',
+            name: 'Design onboarding flow',
             description: '',
             status: 'Doing',
             subtasks: [
               {
-                title: 'Sign up page',
-                isCompleted: true,
+                name: 'Sign up page',
+                done: true,
               },
               {
-                title: 'Sign in page',
-                isCompleted: false,
+                name: 'Sign in page',
+                done: false,
               },
               {
-                title: 'Welcome page',
-                isCompleted: false,
+                name: 'Welcome page',
+                done: false,
               },
             ],
           },
           {
-            title: 'Add search enpoints',
+            name: 'Add search enpoints',
             description: '',
             status: 'Doing',
             subtasks: [
               {
-                title: 'Add search endpoint',
-                isCompleted: true,
+                name: 'Add search endpoint',
+                done: true,
               },
               {
-                title: 'Define search filters',
-                isCompleted: false,
+                name: 'Define search filters',
+                done: false,
               },
             ],
           },
           {
-            title: 'Add authentication endpoints',
+            name: 'Add authentication endpoints',
             description: '',
             status: 'Doing',
             subtasks: [
               {
-                title: 'Define user model',
-                isCompleted: true,
+                name: 'Define user model',
+                done: true,
               },
               {
-                title: 'Add auth endpoints',
-                isCompleted: false,
+                name: 'Add auth endpoints',
+                done: false,
               },
             ],
           },
           {
-            title:
-              'Research pricing points of various competitors and trial different business models',
+            name: 'Research pricing points of various competitors and trial different business models',
             description:
               "We know what we're planning to build for version one. Now we need to finalise the first pricing model we'll use. Keep iterating the subtasks until we have a coherent proposition.",
             status: 'Doing',
             subtasks: [
               {
-                title: 'Research competitor pricing and business models',
-                isCompleted: true,
+                name: 'Research competitor pricing and business models',
+                done: true,
               },
               {
-                title: 'Outline a business model that works for our solution',
-                isCompleted: false,
+                name: 'Outline a business model that works for our solution',
+                done: false,
               },
               {
-                title:
-                  'Talk to potential customers about our proposed solution and ask for fair price expectancy',
-                isCompleted: false,
+                name: 'Talk to potential customers about our proposed solution and ask for fair price expectancy',
+                done: false,
               },
             ],
           },
@@ -188,106 +189,104 @@ const serverMock: ServerBoard[] = [
         name: 'Done',
         tasks: [
           {
-            title: 'Conduct 5 wireframe tests',
+            name: 'Conduct 5 wireframe tests',
             description:
               'Ensure the layout continues to make sense and we have strong buy-in from potential users.',
             status: 'Done',
             subtasks: [
               {
-                title: 'Complete 5 wireframe prototype tests',
-                isCompleted: true,
+                name: 'Complete 5 wireframe prototype tests',
+                done: true,
               },
             ],
           },
           {
-            title: 'Create wireframe prototype',
+            name: 'Create wireframe prototype',
             description:
               'Create a greyscale clickable wireframe prototype to test our asssumptions so far.',
             status: 'Done',
             subtasks: [
               {
-                title: 'Create clickable wireframe prototype in Balsamiq',
-                isCompleted: true,
+                name: 'Create clickable wireframe prototype in Balsamiq',
+                done: true,
               },
             ],
           },
           {
-            title: 'Review results of usability tests and iterate',
+            name: 'Review results of usability tests and iterate',
             description:
               "Keep iterating through the subtasks until we're clear on the core concepts for the app.",
             status: 'Done',
             subtasks: [
               {
-                title:
-                  'Meet to review notes from previous tests and plan changes',
-                isCompleted: true,
+                name: 'Meet to review notes from previous tests and plan changes',
+                done: true,
               },
               {
-                title: 'Make changes to paper prototypes',
-                isCompleted: true,
+                name: 'Make changes to paper prototypes',
+                done: true,
               },
               {
-                title: 'Conduct 5 usability tests',
-                isCompleted: true,
+                name: 'Conduct 5 usability tests',
+                done: true,
               },
             ],
           },
           {
-            title:
-              'Create paper prototypes and conduct 10 usability tests with potential customers',
+            name: 'Create paper prototypes and conduct 10 usability tests with potential customers',
             description: '',
             status: 'Done',
             subtasks: [
               {
-                title: 'Create paper prototypes for version one',
-                isCompleted: true,
+                name: 'Create paper prototypes for version one',
+                done: true,
               },
               {
-                title: 'Complete 10 usability tests',
-                isCompleted: true,
+                name: 'Complete 10 usability tests',
+                done: true,
               },
             ],
           },
           {
-            title: 'Market discovery',
+            name: 'Market discovery',
             description:
               'We need to define and refine our core product. Interviews will help us learn common pain points and help us define the strongest MVP.',
             status: 'Done',
             subtasks: [
               {
-                title: 'Interview 10 prospective customers',
-                isCompleted: true,
+                name: 'Interview 10 prospective customers',
+                done: true,
               },
             ],
           },
           {
-            title: 'Competitor analysis',
+            name: 'Competitor analysis',
             description: '',
             status: 'Done',
             subtasks: [
               {
-                title: 'Find direct and indirect competitors',
-                isCompleted: true,
+                name: 'Find direct and indirect competitors',
+                done: true,
               },
               {
-                title: 'SWOT analysis for each competitor',
-                isCompleted: true,
+                name: 'SWOT analysis for each competitor',
+                done: true,
               },
             ],
           },
           {
-            title: 'Research the market',
+            name: 'Research the market',
             description:
               'We need to get a solid overview of the market to ensure we have up-to-date estimates of market size and demand.',
             status: 'Done',
             subtasks: [
               {
-                title: 'Write up research analysis',
-                isCompleted: true,
+                name: 'Write up research analysis',
+                done: true,
               },
               {
-                title: 'Calculate TAM',
-                isCompleted: true,
+                name: 'Calculate TAM',
+                done: true,
               },
             ],
           },
@@ -297,80 +296,81 @@ const serverMock: ServerBoard[] = [
   },
   {
     name: 'Marketing Plan',
-    columns: [
+    ownerId,
+    statuses: [
       {
         name: 'Todo',
         tasks: [
           {
-            title: 'Plan Product Hunt launch',
+            name: 'Plan Product Hunt launch',
             description: '',
             status: 'Todo',
             subtasks: [
               {
-                title: 'Find hunter',
-                isCompleted: false,
+                name: 'Find hunter',
+                done: false,
               },
               {
-                title: 'Gather assets',
-                isCompleted: false,
+                name: 'Gather assets',
+                done: false,
               },
               {
-                title: 'Draft product page',
-                isCompleted: false,
+                name: 'Draft product page',
+                done: false,
               },
               {
-                title: 'Notify customers',
-                isCompleted: false,
+                name: 'Notify customers',
+                done: false,
               },
               {
-                title: 'Notify network',
-                isCompleted: false,
+                name: 'Notify network',
+                done: false,
               },
               {
-                title: 'Launch!',
-                isCompleted: false,
-              },
-            ],
-          },
-          {
-            title: 'Share on Show HN',
-            description: '',
-            status: '',
-            subtasks: [
-              {
-                title: 'Draft out HN post',
-                isCompleted: false,
-              },
-              {
-                title: 'Get feedback and refine',
-                isCompleted: false,
-              },
-              {
-                title: 'Publish post',
-                isCompleted: false,
+                name: 'Launch!',
+                done: false,
               },
             ],
           },
           {
-            title: 'Write launch article to publish on multiple channels',
+            name: 'Share on Show HN',
             description: '',
             status: '',
             subtasks: [
               {
-                title: 'Write article',
-                isCompleted: false,
+                name: 'Draft out HN post',
+                done: false,
               },
               {
-                title: 'Publish on LinkedIn',
-                isCompleted: false,
+                name: 'Get feedback and refine',
+                done: false,
               },
               {
-                title: 'Publish on Inndie Hackers',
-                isCompleted: false,
+                name: 'Publish post',
+                done: false,
+              },
+            ],
+          },
+          {
+            name: 'Write launch article to publish on multiple channels',
+            description: '',
+            status: '',
+            subtasks: [
+              {
+                name: 'Write article',
+                done: false,
               },
               {
-                title: 'Publish on Medium',
-                isCompleted: false,
+                name: 'Publish on LinkedIn',
+                done: false,
+              },
+              {
+                name: 'Publish on Inndie Hackers',
+                done: false,
+              },
+              {
+                name: 'Publish on Medium',
+                done: false,
               },
             ],
           },
@@ -388,42 +388,43 @@ const serverMock: ServerBoard[] = [
   },
   {
     name: 'Roadmap',
-    columns: [
+    ownerId,
+    statuses: [
       {
         name: 'Now',
         tasks: [
           {
-            title: 'Launch version one',
+            name: 'Launch version one',
             description: '',
             status: '',
             subtasks: [
               {
-                title: 'Launch privately to our waitlist',
-                isCompleted: false,
+                name: 'Launch privately to our waitlist',
+                done: false,
               },
               {
-                title: 'Launch publicly on PH, HN, etc.',
-                isCompleted: false,
+                name: 'Launch publicly on PH, HN, etc.',
+                done: false,
               },
             ],
           },
           {
-            title: 'Review early feedback and plan next steps for roadmap',
+            name: 'Review early feedback and plan next steps for roadmap',
             description:
               "Beyond the initial launch, we're keeping the initial roadmap completely empty. This meeting will help us plan out our next steps based on actual customer feedback.",
             status: '',
             subtasks: [
               {
-                title: 'Interview 10 customers',
-                isCompleted: false,
+                name: 'Interview 10 customers',
+                done: false,
               },
               {
-                title: 'Review common customer pain points and suggestions',
-                isCompleted: false,
+                name: 'Review common customer pain points and suggestions',
+                done: false,
               },
               {
-                title: 'Outline next steps for our roadmap',
-                isCompleted: false,
+                name: 'Outline next steps for our roadmap',
+                done: false,
               },
             ],
           },

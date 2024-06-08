@@ -5,8 +5,8 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { v4 as uuidv4 } from 'uuid'
 
 import { FormTaskEdit, FormTaskShow } from '@/modules/forms'
-import { Task } from '@/context/todo.context'
-import { useAppContext } from '@/context/app.context'
+import { Task } from '@/common/context/todo.context'
+import { useAppContext } from '@/common/context/app.context'
 
 type TEditTaskFormWrapper = {
   onShowTaskModal: (show: boolean) => void

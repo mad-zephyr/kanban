@@ -5,7 +5,7 @@ import { Button, Text } from '@radix-ui/themes'
 import cn from 'classnames'
 
 import { Switcher } from '@/components/ui'
-import { useAppContext } from '@/context/app.context'
+import { useAppContext } from '@/common/context/app.context'
 import LightIcon from '@/assets/icon-light-theme.svg'
 import DarkIcon from '@/assets/icon-dark-theme.svg'
 import HideIcon from '@/assets/icon-hide-sidebar.svg'
@@ -41,7 +41,7 @@ export const Sidebar: FC = () => {
     setLightTheme()
   }
 
-  const isBoardsExist = boards.length > 0
+  const isBoardsExist = boards?.length > 0
 
   return (
     <>
