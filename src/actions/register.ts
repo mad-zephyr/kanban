@@ -2,9 +2,9 @@
 
 import bcrypt from 'bcryptjs'
 
-import { SignupAuthFormSchemaType } from '@/modules/forms/auth/signup/form-auth-signup'
 import { db } from '@/lib/db'
 import { getUserByEmail } from '@/data/user'
+import { SignupAuthFormSchemaType } from '@/common/schemas/register'
 
 const registerUser = async (
   values: SignupAuthFormSchemaType

@@ -1,11 +1,10 @@
 'use client'
 
-import { FC, useEffect, useState, useTransition } from 'react'
+import { FC, useState, useTransition } from 'react'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button } from '@radix-ui/themes'
 import cn from 'classnames'
-import { usePathname } from 'next/navigation'
 
 import { Callout, Input } from '@/components/ui'
 import { login } from '@/actions/login'
@@ -26,7 +25,6 @@ const DEFAULT_AUTH_DATA = {
 }
 
 const LoginAuthForm: FC<TLoginAuthForm> = ({ onClose }) => {
-  const pathName = usePathname()
   const [isFormSubmiting, startSubmiting] = useTransition()
   const [inputPassType, setInputPassType] = useState<'password' | ''>(
     'password'
