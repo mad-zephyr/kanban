@@ -1,15 +1,16 @@
 'use client'
 
-import { FC, useEffect, useState } from 'react'
+import { FC, Suspense, useEffect, useState } from 'react'
 import { IconButton } from '@radix-ui/themes'
 import { EnterIcon, PersonIcon } from '@radix-ui/react-icons'
 import { signOut } from 'next-auth/react'
 import { useRouter, useSearchParams } from 'next/navigation'
 
-import { Avatar, DropDown, DropDownItem } from '@/components/ui'
+import { Avatar, DropDown, DropDownItem, useToast } from '@/components/ui'
 import Modal from '@/components/ui/modal/modal'
 import { useCurrentSession } from '@/common/hooks/useCurrentSession'
 import { DEFAULT_LOGIN_REDIRECT } from '@/routes'
+import { TToast } from '@/components/ui/toaster/components'
 
 import styles from './styles.module.sass'
 import SignupAuthForm from '../forms/auth/signup/form-auth-signup'
@@ -17,6 +18,14 @@ import LoginAuthForm from '../forms/auth/login/form-auth-login'
 
 const BASE_IMG =
   'https://images.unsplash.com/photo-1492633423870-43d1cd2775eb?&w=128&h=128&dpr=2&q=80'
+
+const BASE_TOAST: TToast = {
+  type: 'background',
+  description:
+    'This web app utilizes `localStorage` to store your data. Please log in to access your data across devices.',
+  title: 'HI THERE!!',
+  status: 'default',
+}
 
 const FORM_TEXT = {
   login: {
@@ -54,6 +63,21 @@ export const AuthModule: FC = () => {
       setIsShowAuthModal(true)
     }
   }, [searchParams])
+
+  const { base } = useToast()
+
+  useEffect(() => {
+    if (!user) {
+      base(BASE_TOAST)
+    } else {
+      base({
+        type: 'foreground',
+        status: 'default',
+        title: `WELCOME BACK ${user.name}!!`,
+        description: ``,
+      })
+    }
+  }, [base, user])
 
   const handleAuthState = () => {
     setAuthFormState((prevState) =>

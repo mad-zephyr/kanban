@@ -4,6 +4,7 @@ import { FC, ReactElement, useEffect } from 'react'
 
 import { useToast } from '@/components/ui'
 import { TToast } from '@/components/ui/toaster/components'
+import { useCurrentSession } from '@/common/hooks/useCurrentSession'
 
 type TInformCenter = {
   children: ReactElement
@@ -20,12 +21,20 @@ const BASE_TOAST: TToast = {
 export const InformCenter: FC<TInformCenter> = ({ children }) => {
   const { base } = useToast()
 
-  const isAuthenticated = false
+  const { session } = useCurrentSession()
+  const user = session?.user
 
   useEffect(() => {
-    if (!isAuthenticated) {
+    if (!user) {
       base(BASE_TOAST)
+    } else {
+      base({
+        type: 'foreground',
+        status: 'default',
+        title: `WELCOME BACK ${user.name}!!`,
+        description: ``,
+      })
     }
-  }, [base, isAuthenticated])
+  }, [base, user])
   return <>{children}</>
 }

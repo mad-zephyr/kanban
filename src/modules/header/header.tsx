@@ -1,7 +1,7 @@
 'use client'
 
 import { Button, Flex, FlexProps, Heading, IconButton } from '@radix-ui/themes'
-import { FC, useState } from 'react'
+import { FC, Suspense, useState } from 'react'
 import cn from 'classnames'
 import { Item } from '@radix-ui/react-dropdown-menu'
 import { DotsVerticalIcon } from '@radix-ui/react-icons'
@@ -101,7 +101,9 @@ export const Header: FC = () => {
               }
             />
           )}
-          <AuthModule />
+          <Suspense>
+            <AuthModule />
+          </Suspense>
         </div>
         <Modal
           isOpen={isShowAddTaskModal}

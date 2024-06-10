@@ -4,9 +4,8 @@ import { ReactNode } from 'react'
 import { Plus_Jakarta_Sans } from 'next/font/google'
 import { Flex } from '@radix-ui/themes'
 
-import { Persist } from '@/modules/persist/persist'
 import { MODAL_ROOT_ID } from '@/common/constants'
-import { Header, InformCenter, Sidebar } from '@/modules'
+import { Header, Sidebar } from '@/modules'
 import { ThemeProvider } from '@/common/providers/theme.provider'
 import { Toaster } from '@/components/ui'
 import { QueryProvider } from '@/common/providers/query.provider'
@@ -36,16 +35,14 @@ export default function RootLayout({
           <ThemeProvider>
             <AuthProvider>
               <Toaster>
-                <InformCenter>
-                  <>
-                    <Flex className={styles.main}>
-                      <Header />
-                      <Sidebar />
-                      {children}
-                    </Flex>
-                    <div id={MODAL_ROOT_ID} />
-                  </>
-                </InformCenter>
+                <>
+                  <Flex className={styles.main}>
+                    <Header />
+                    <Sidebar />
+                    {children}
+                  </Flex>
+                  <div id={MODAL_ROOT_ID} />
+                </>
               </Toaster>
             </AuthProvider>
           </ThemeProvider>
