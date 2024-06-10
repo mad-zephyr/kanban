@@ -10,3 +10,5 @@ GOOGLE_CLIENT_SECRET=google_client_secret
 
 NEXT_PUBLIC_API_PROD=http://localhost:3000
 NEXT_PUBLIC_API_DEV=http://localhost:3000
+
+RESEND_API_KEY=api key resend service for sending emails (https://resend.com/)
