@@ -3,7 +3,7 @@
  * These routes do not require authentication
  * @type {string[]}
  */
-const publicRoutes: string[] = ['/']
+const publicRoutes: string[] = ['/', '/auth/new-verification']
 
 /**
  * An array of routesthat that accesibleto the authentication
@@ -23,6 +23,6 @@ const apiAuthPrefix: string = '/api/auth'
  * The default redirect path after userlogged in
  * @type {string}
  */
-const DEFAULT_LOGIN_REDIRECT: string = '/settings'
+const DEFAULT_LOGIN_REDIRECT: string = '/'
 
 export { publicRoutes, authRoutes, apiAuthPrefix, DEFAULT_LOGIN_REDIRECT }

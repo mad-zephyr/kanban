@@ -7,6 +7,10 @@ import { db } from './lib/db'
 import { getUserById } from './data/user'
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
+  pages: {
+    signIn: '/',
+    error: '/',
+  },
   events: {
     async linkAccount({ user }) {
       await db.user.update({
@@ -15,21 +19,19 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       })
     },
   },
-  pages: {
-    signIn: '/',
-    error: '/',
-  },
+
   callbacks: {
     async signIn({ user, account }) {
+      console.log({ user, account })
       // Allow OAuth without email verification
-      if (account?.provider !== 'credentials') {
+      if (account?.type !== 'credentials') {
         return true
       }
 
       const existingUser = await getUserById(user.id)
 
       // Prevent sign in without email verification
-      if (!existingUser || !existingUser.emailVerified) {
+      if (!existingUser?.emailVerified) {
         return false
       }
 
