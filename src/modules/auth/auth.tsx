@@ -1,10 +1,10 @@
 'use client'
 
-import { FC, useState } from 'react'
+import { FC, useEffect, useState } from 'react'
 import { IconButton } from '@radix-ui/themes'
 import { EnterIcon, PersonIcon } from '@radix-ui/react-icons'
 import { signOut } from 'next-auth/react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 
 import { Avatar, DropDown, DropDownItem } from '@/components/ui'
 import Modal from '@/components/ui/modal/modal'
@@ -32,6 +32,7 @@ const FORM_TEXT = {
 }
 
 export const AuthModule: FC = () => {
+  const searchParams = useSearchParams()
   const { push } = useRouter()
   const [dropDownContainer, setDropDownContainer] =
     useState<HTMLElement | null>(null)
@@ -48,6 +49,12 @@ export const AuthModule: FC = () => {
     setIsShowAuthModal((prev) => !prev)
   }
 
+  useEffect(() => {
+    if (searchParams.get('error') === 'OAuthAccountNotLinked') {
+      setIsShowAuthModal(true)
+    }
+  }, [searchParams])
+
   const handleAuthState = () => {
     setAuthFormState((prevState) =>
       prevState === 'login' ? 'signup' : 'login'
@@ -55,19 +62,21 @@ export const AuthModule: FC = () => {
   }
 
   return (
-    <div ref={setDropDownContainer} datatype="auth_btn" className={styles.main}>
+    <div ref={setDropDownContainer} className={styles.main}>
       {user ? (
         <DropDown
-          withArrow
+          withArrow={false}
           className={styles.dropDown}
           container={dropDownContainer}
           triger={
             user.image && user.name ? (
-              <Avatar
-                fallback={user.name}
-                name={user.name}
-                image={user.image}
-              />
+              <button>
+                <Avatar
+                  fallback={userNameShortning(user.name)}
+                  name={userNameShortning(user.name)}
+                  image={user.image}
+                />
+              </button>
             ) : (
               <IconButton variant="ghost" size={'4'}>
                 <PersonIcon />
@@ -113,4 +122,13 @@ export const AuthModule: FC = () => {
       </Modal>
     </div>
   )
+}
+
+function userNameShortning(name: string) {
+  return name
+    ? name
+        .split(' ')
+        .map((namePart) => namePart[0])
+        .join('')
+    : 'UN'
 }

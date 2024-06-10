@@ -31,16 +31,17 @@ export const AuthProvider: FC<TAuthProvider> = ({ children }) => {
 
             updateTasks(tasks)
             updateBoards(boards)
-            setActiveBoard(boards[0].id)
+            setActiveBoard(boards[0]?.id || '')
           })
         }
       }
 
       case 'unauthenticated': {
         const { boards, tasks } = UiBoardModel(serverMock)
-        setActiveBoard(boards[0].id)
+
         updateTasks(tasks)
         updateBoards(boards)
+        setActiveBoard(boards[0]?.id || '')
       }
     }
   }, [setActiveBoard, status, updateBoards, updateTasks, userId])

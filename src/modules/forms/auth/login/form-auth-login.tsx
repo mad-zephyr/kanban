@@ -1,10 +1,11 @@
 'use client'
 
-import { FC, useState, useTransition } from 'react'
+import { FC, useEffect, useState, useTransition } from 'react'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button } from '@radix-ui/themes'
 import cn from 'classnames'
+import { useParams, useSearchParams } from 'next/navigation'
 
 import { Callout, Input } from '@/components/ui'
 import { login } from '@/actions/login'
@@ -14,6 +15,7 @@ import {
 } from '@/common/schemas/login'
 
 import styles from './style.module.sass'
+import { SocialAuth } from '../social/social'
 
 type TLoginAuthForm = {
   onClose: () => void
@@ -25,6 +27,7 @@ const DEFAULT_AUTH_DATA = {
 }
 
 const LoginAuthForm: FC<TLoginAuthForm> = ({ onClose }) => {
+  const searchParams = useSearchParams()
   const [isFormSubmiting, startSubmiting] = useTransition()
   const [inputPassType, setInputPassType] = useState<'password' | ''>(
     'password'
@@ -35,6 +38,18 @@ const LoginAuthForm: FC<TLoginAuthForm> = ({ onClose }) => {
     message?: string
   }>({})
 
+  useEffect(() => {
+    if (searchParams.get('error') === 'OAuthAccountNotLinked') {
+      setFormStatus({
+        type: 'error',
+        message: 'Email already in use with diffrent provider',
+      })
+    } else {
+      setFormStatus({})
+    }
+  }, [searchParams])
+
+  searchParams
   const showPassHandler = () => {
     setInputPassType((prevState) =>
       prevState === 'password' ? '' : 'password'
@@ -58,7 +73,8 @@ const LoginAuthForm: FC<TLoginAuthForm> = ({ onClose }) => {
       if (data?.type === 'error') {
         setFormStatus({ type: data?.type, message: data?.message })
       } else {
-        onClose()
+        setFormStatus(data)
+        // onClose()
       }
     })
   }
@@ -114,6 +130,7 @@ const LoginAuthForm: FC<TLoginAuthForm> = ({ onClose }) => {
       >
         Login
       </Button>
+      <SocialAuth />
     </form>
   )
 }

@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { FC, forwardRef } from 'react'
 // import * as Av from '@radix-ui/react-avatar'
 import { Avatar as Av, AvatarProps } from '@radix-ui/themes'
 
@@ -9,10 +9,10 @@ type TAvatar = AvatarProps & {
   image?: string
 }
 
-export const Avatar: FC<TAvatar> = ({
-  name,
-  image = '',
-  fallback,
-  size = '4',
-  ...rest
-}) => <Av size={size} src={image} fallback={name} {...rest} />
+export const Avatar: FC<TAvatar> = forwardRef(
+  ({ name, image = '', fallback, size = '4', ...rest }, ref) => {
+    return <Av size={size} src={image} fallback={name} {...rest} />
+  }
+)
+
+Avatar.displayName = 'Avatar'
