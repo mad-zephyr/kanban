@@ -63,9 +63,11 @@ export const Header: FC = () => {
         {lightTheme ? <LogoLight /> : <LogoDark />}
       </div>
       <Flex {...flexPropsStyle} className={styles.content}>
-        <Heading as="h3" size="6">
-          Platform Launch
-        </Heading>
+        {currentBoard && (
+          <Heading as="h3" size="6">
+            {currentBoard.name}
+          </Heading>
+        )}
         <div className={styles.right}>
           <Button
             onClick={handleShowAddTaskModal}
